@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #000;  /* Black background */
+            color: #E0E0E0;  /* Light text color */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #1F1F1F;  /* Slightly lighter background for container */
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);  /* Soft shadow */
+            text-align: center;
+            width: 350px;
+        }
+
+        /* Input Fields */
+        input[type="text"], input[type="password"] {
+            width: calc(100% - 24px);  /* Full width minus padding */
+            padding: 12px;
+            margin: 12px 0;
+            background-color: #333;  /* Dark input background */
+            border: 1px solid #555;  /* Dark border */
+            border-radius: 5px;
+            color: #E0E0E0;  /* Light text color */
+            box-sizing: border-box;  /* Ensures padding doesn't increase the overall width */
+        }
+
+        /* Buttons */
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #2979FF;  /* Bright blue button */
+            border: none;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 12px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #1565C0;  /* Darker blue on hover */
+        }
+
+        /* Error Messages */
+        #error-message {
+            color: #FF5252;  /* Bright red for errors */
+            margin-top: 10px;
+        }
+
+        /* Headings */
+        h2 {
+            margin-bottom: 20px;
+            color: #E0E0E0;  /* Light text color for headings */
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container login-container">
+        <h2>Login</h2>
+        <form id="loginForm">
+            <input type="text" id="username" placeholder="Username" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <button type="submit">Login</button>
+        </form>
+        <p id="error-message"></p>
+    </div>
+
+    <script>
+        // Hardcoded credentials for demonstration (should be in a secure database in production)
+        const validUsername = "Vara_City_Police_Dep";
+        const validPassword = "Vara_City_Police_Dep";
+
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault();  // Prevent form submission
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('error-message');
+
+            if (username === validUsername && password === validPassword) {
+                window.location.href = "https://softvortexxz.github.io/vara/editor.html";  // Redirect to editor
+            } else {
+                errorMessage.textContent = "Invalid username or password.";
+            }
+        });
+    </script>
+</body>
+</html>
