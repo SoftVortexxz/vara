@@ -11,10 +11,19 @@
             background-color: #000;  /* Black background */
             color: #E0E0E0;  /* Light text color */
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
+        }
+
+        .header {
+            margin-bottom: 20px;
+            color: #E0E0E0;  /* Light text color */
+            font-size: 28px;
+            font-weight: bold;
+            text-align: center;
         }
 
         .container {
@@ -39,7 +48,10 @@
         }
 
         textarea {
-            height: 150px;  /* Fixed height for content area */
+            height: 250px;  /* Increased height for the content area */
+            resize: vertical;  /* Allows vertical resizing */
+            white-space: pre-wrap;  /* Preserves whitespace and line breaks */
+            overflow: auto;  /* Adds scrollbars if necessary */
         }
 
         /* Buttons */
@@ -83,16 +95,19 @@
     </style>
 </head>
 <body>
+    <div class="header">
+        Vara City Criminal Records
+    </div>
     <div class="container editor-container">
         <h2>Editor</h2>
         
         <!-- File Name Input -->
         <label for="filename">Name:</label>
-        <input type="text" id="filename" placeholder="put player's user here">
+        <input type="text" id="filename" placeholder="Enter player's name here">
 
         <!-- Content Textarea -->
         <label for="filecontent">Content:</label>
-        <textarea id="filecontent" placeholder="put text about them here"></textarea>
+        <textarea id="filecontent" placeholder="User:\nAge:\nDate of birth:\nCountry of birth:\nCurrent Country:\nJob:\nCrimes committed:"></textarea>
 
         <!-- Buttons -->
         <button id="saveButton">Save</button>
