@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const initialContent = `User:\nAge:\nDate of birth:\nCountry of birth:\nCurrent Country:\nJob:\nCrimes committed:`;
+    const initialContent = `Name:\nAge:\nDate of birth:\nCountry of birth:\nCurrent Country:\nJob:\n\nCriminal records:`;
     
     // Set initial content for the textarea
     document.getElementById('filecontent').value = initialContent;
@@ -14,7 +14,7 @@ document.getElementById('saveButton').addEventListener('click', function() {
         localStorage.setItem(filename, filecontent);
         message.textContent = "File saved";
     } else {
-        message.textContent = "Put The person's username and Info in the info box";
+        message.textContent = "Put the person's user, info and history";
     }
 });
 
@@ -32,6 +32,6 @@ document.getElementById('loadButton').addEventListener('click', function() {
             message.textContent = "File not found";
         }
     } else {
-        message.textContent = "Put someone's user to load their data";
+        message.textContent = "Put someone's user to load their info & history";
     }
 });
