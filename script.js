@@ -7,8 +7,8 @@ const userTable = {
 document.getElementById('loginForm').addEventListener('submit', function(event) {
     event.preventDefault(); // Prevent the form from submitting normally
 
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
     const errorMessage = document.getElementById('error-message');
 
     if (checkCredentials(username, password)) {
@@ -21,7 +21,8 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
 
 // Utility function to check user credentials
 function checkCredentials(username, password) {
-    return userTable[username] === password;
+    const storedPassword = userTable[username];
+    return storedPassword === password;
 }
 
 // Set initial content for the textarea when the document loads
@@ -34,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Save button functionality
 document.getElementById('saveButton').addEventListener('click', function() {
-    const filename = document.getElementById('filename').value;
+    const filename = document.getElementById('filename').value.trim();
     const filecontent = document.getElementById('filecontent').value;
     const message = document.getElementById('message');
     
@@ -48,7 +49,7 @@ document.getElementById('saveButton').addEventListener('click', function() {
 
 // Load button functionality
 document.getElementById('loadButton').addEventListener('click', function() {
-    const filename = document.getElementById('filename').value;
+    const filename = document.getElementById('filename').value.trim();
     const filecontent = document.getElementById('filecontent');
     const message = document.getElementById('message');
     
