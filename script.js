@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const initialContent = `Name:\nAge:\nDate of birth:\nCountry of birth:\nCurrent Country:\nJob:\n\nCriminal records:`;
+    const initialContent = `Name: \nAge: \nDate of birth: \nCountry of birth: \nCurrent Country: \nJob: \n\nCriminal records: `;
     
     // Set initial content for the textarea
     document.getElementById('filecontent').value = initialContent;
