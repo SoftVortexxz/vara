@@ -83,22 +83,31 @@
 
     <script>
         // Hardcoded credentials for demonstration (should be in a secure database in production)
-        const validUsername = "Vara_City_Police_Dep";
-        const validPassword = "Vara_City_Police_Dep";
+        const userTable = {
+            "matejgamer12": "ebea5efc-9eb4-497b-b402-f0930b582b48",
+        };
 
+        // Handle the login form submission
         document.getElementById('loginForm').addEventListener('submit', function(event) {
             event.preventDefault();  // Prevent form submission
 
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
             const errorMessage = document.getElementById('error-message');
 
-            if (username === validUsername && password === validPassword) {
-                window.location.href = "https://softvortexxz.github.io/vara/editor.html";  // Redirect to editor
+            if (checkCredentials(username, password)) {
+                // Redirect to the editor page
+                window.location.href = "https://softvortexxz.github.io/vara/editor.html";
             } else {
-                errorMessage.textContent = "wrong user or pass";
+                errorMessage.textContent = "Invalid username or password.";
             }
         });
+
+        // Utility function to check user credentials
+        function checkCredentials(username, password) {
+            const storedPassword = userTable[username];
+            return storedPassword === password;
+        }
     </script>
 </body>
 </html>
