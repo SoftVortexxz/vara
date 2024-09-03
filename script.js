@@ -31,33 +31,33 @@ if (document.getElementById('loginForm')) {
 if (document.getElementById('saveButton')) {
     checkLogin();
 
-    // Save file to localStorage
-    document.getElementById('saveButton').addEventListener('click', function() {
-        const filename = document.getElementById('filename').value;
-        const content = document.getElementById('filecontent').value;
+document.getElementById('saveButton').addEventListener('click', function() {
+    const filename = document.getElementById('filename').value;
+    const filecontent = document.getElementById('filecontent').value;
+    const message = document.getElementById('message');
+    
+    if (filename && filecontent) {
+        localStorage.setItem(filename, filecontent);
+        message.textContent = "file saved";
+    } else {
+        message.textContent = "put a name and text";
+    }
+});
 
-        if (filename && content) {
-            localStorage.setItem(filename, content);
-            document.getElementById('message').textContent = 'File saved';
+document.getElementById('loadButton').addEventListener('click', function() {
+    const filename = document.getElementById('filename').value;
+    const filecontent = document.getElementById('filecontent');
+    const message = document.getElementById('message');
+    
+    if (filename) {
+        const savedContent = localStorage.getItem(filename);
+        if (savedContent) {
+            filecontent.value = savedContent;
+            message.textContent = "file loaded";
         } else {
-            document.getElementById('message').textContent = 'put a file name and some text to save';
+            message.textContent = "file X found";
         }
-    });
-
-    // Load file from localStorage
-    document.getElementById('loadButton').addEventListener('click', function() {
-        const filename = document.getElementById('filename').value;
-
-        if (filename) {
-            const content = localStorage.getItem(filename);
-            if (content) {
-                document.getElementById('filecontent').value = content;
-                document.getElementById('message').textContent = 'File saved';
-            } else {
-                document.getElementById('message').textContent = 'File X found';
-            }
-        } else {
-            document.getElementById('message').textContent = 'put a file name to load';
-        }
-    });
-}
+    } else {
+        message.textContent = "enter player's username to load";
+    }
+});
