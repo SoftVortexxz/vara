@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Criminal Records</title>
+    <title>Vara City</title>
     <style>
         /* General Styles */
         body {
@@ -11,19 +11,10 @@
             background-color: #000;  /* Black background */
             color: #E0E0E0;  /* Light text color */
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-        }
-
-        .header {
-            margin-bottom: 20px;
-            color: #E0E0E0;  /* Light text color */
-            font-size: 28px;
-            font-weight: bold;
-            text-align: center;
         }
 
         .container {
@@ -48,23 +39,20 @@
         }
 
         textarea {
-            height: 250px;  /* Increased height for the content area */
-            resize: vertical;  /* Allows vertical resizing */
-            white-space: pre-wrap;  /* Preserves whitespace and line breaks */
-            overflow: auto;  /* Adds scrollbars if necessary */
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Ensures text is easy to read */
+            height: 150px;  /* Fixed height for content area */
+            white-space: pre; /* Preserve white space and line breaks */
         }
 
         /* Buttons */
         button {
-            width: calc(33% - 16px);  /* One-third width minus padding */
+            width: calc(33% - 24px);  /* Three buttons in a row */
             padding: 12px;
             background-color: #2979FF;  /* Bright blue button */
             border: none;
             color: #fff;
             border-radius: 5px;
             cursor: pointer;
-            margin: 6px;
+            margin: 12px 4px;
             font-weight: bold;
             transition: background-color 0.3s;
         }
@@ -93,40 +81,73 @@
             margin-bottom: 5px;
             color: #B0B0B0;  /* Slightly lighter than the background */
         }
-
-        .button-container {
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-        }
     </style>
 </head>
 <body>
-    <div class="header">
-        Vara City Criminal Records
-    </div>
     <div class="container editor-container">
         <h2>Vara City Criminal Records</h2>
         
         <!-- File Name Input -->
         <label for="filename">Name:</label>
-        <input type="text" id="filename" placeholder="Enter player's name here">
+        <input type="text" id="filename" placeholder="Put file name here">
 
         <!-- Content Textarea -->
-        <label for="filecontent">History & info:</label>
-        <textarea id="filecontent"></textarea>
+        <label for="filecontent">History & Info:</label>
+        <textarea id="filecontent" placeholder="Name: \nAge: \nDate of birth: \nCountry of birth: \nCurrent Country: \nJob: \n\nCriminal records: \n"></textarea>
 
         <!-- Buttons -->
-        <div class="button-container">
-            <button id="saveButton">Save</button>
-            <button id="loadButton">Load</button>
-            <button id="newUserButton">New User</button>
-        </div>
+        <button id="saveButton">Save</button>
+        <button id="loadButton">Load</button>
+        <button id="newUserButton">New User</button>
 
         <!-- Message Area -->
         <p id="message"></p>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const initialContent = `Name: \nAge: \nDate of birth: \nCountry of birth: \nCurrent Country: \nJob: \n\nCriminal records: \n`;
+            
+            // Set initial content for the textarea
+            document.getElementById('filecontent').value = initialContent;
+        });
+
+        document.getElementById('saveButton').addEventListener('click', function() {
+            const filename = document.getElementById('filename').value;
+            const filecontent = document.getElementById('filecontent').value;
+            const message = document.getElementById('message');
+            
+            if (filename && filecontent) {
+                localStorage.setItem(filename, filecontent);
+                message.textContent = "File saved";
+            } else {
+                message.textContent = "Put the person's user, info and history";
+            }
+        });
+
+        document.getElementById('loadButton').addEventListener('click', function() {
+            const filename = document.getElementById('filename').value;
+            const filecontent = document.getElementById('filecontent');
+            const message = document.getElementById('message');
+            
+            if (filename) {
+                const savedContent = localStorage.getItem(filename);
+                if (savedContent) {
+                    filecontent.value = savedContent;
+                    message.textContent = "File loaded";
+                } else {
+                    message.textContent = "File not found";
+                }
+            } else {
+                message.textContent = "Put someone's user to load their info & history";
+            }
+        });
+
+        document.getElementById('newUserButton').addEventListener('click', function() {
+            // Clear the filename input and content textarea
+            document.getElementById('filename').value = '';
+            document.getElementById('filecontent').value = `Name: \nAge: \nDate of birth: \nCountry of birth: \nCurrent Country: \nJob: \n\nCriminal records: \n`;
+        });
+    </script>
 </body>
 </html>
