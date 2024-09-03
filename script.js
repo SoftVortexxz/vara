@@ -22,7 +22,7 @@ if (document.getElementById('loginForm')) {
             sessionStorage.setItem('loggedIn', true);
             window.location.href = 'editor.html'; // Redirect to file editor page
         } else {
-            document.getElementById('error-message').textContent = 'Invalid username or password';
+            document.getElementById('error-message').textContent = 'wrong pass or user';
         }
     });
 }
@@ -40,7 +40,7 @@ if (document.getElementById('saveButton')) {
             localStorage.setItem(filename, content);
             document.getElementById('message').textContent = 'File saved';
         } else {
-            document.getElementById('message').textContent = 'Please enter both file name and add text in content';
+            document.getElementById('message').textContent = 'put a file name and some text to save';
         }
     });
 
