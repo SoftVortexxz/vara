@@ -137,7 +137,14 @@
                     }
                 })
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => {
+                        throw new Error(`Error ${response.status}: ${err.message}`);
+                    });
+                }
+                return response.json();
+            })
             .then(data => {
                 console.log('File saved:', data);
                 document.getElementById('message').textContent = 'File saved successfully';
@@ -151,11 +158,22 @@
         // Function to load file from GitHub Gist
         function loadFromGist() {
             fetch(`https://api.github.com/gists/${GIST_ID}`)
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(err => {
+                            throw new Error(`Error ${response.status}: ${err.message}`);
+                        });
+                    }
+                    return response.json();
+                })
                 .then(data => {
-                    const fileContent = data.files['varacity.db'].content;
-                    document.getElementById('filecontent').value = fileContent;
-                    document.getElementById('message').textContent = 'File loaded successfully';
+                    if (data.files['varacity.db']) {
+                        const fileContent = data.files['varacity.db'].content;
+                        document.getElementById('filecontent').value = fileContent;
+                        document.getElementById('message').textContent = 'File loaded successfully';
+                    } else {
+                        document.getElementById('message').textContent = 'File not found in Gist';
+                    }
                 })
                 .catch(error => {
                     console.error('Error loading file:', error);
@@ -191,3 +209,5 @@
     </script>
 </body>
 </html>
+
+
