@@ -121,39 +121,36 @@
         const GITHUB_TOKEN = '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';
         const GIST_ID = 'a0b6c39f6db05949aa84e58051bb9fe3'; // Gist ID where you want to store the file
 
-        // Function to save file to GitHub Gist
-        function saveToGist(fileContent) {
-            fetch(`https://api.github.com/gists/${GIST_ID}`, {
-                method: 'PATCH',
-                headers: {
-                    'Authorization': `token ${GITHUB_TOKEN}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    files: {
-                        'varacity.db': {
-                            content: fileContent
-                        }
-                    }
-                })
-            })
-            .then(response => {
-                if (!response.ok) {
-                    return response.json().then(err => {
-                        throw new Error(`Error ${response.status}: ${err.message}`);
-                    });
+ // Function to save file to GitHub Gist
+function saveToGist(fileContent) {
+    fetch(`https://api.github.com/gists/${GIST_ID}`, {
+        method: 'PATCH',
+        headers: {
+            'Authorization': `token ${GITHUB_TOKEN}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            files: {
+                'varacity.db': {
+                    content: fileContent
                 }
-                return response.json();
-            })
-            .then(data => {
-                console.log('File saved:', data);
-                document.getElementById('message').textContent = 'File saved successfully';
-            })
-            .catch(error => {
-                console.error('Error saving file:', error);
-                document.getElementById('message').textContent = 'Error saving file: ' + error.message;
-            });
+            }
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.files && data.files['varacity.db']) {
+            console.log('File saved:', data);
+            document.getElementById('message').textContent = 'File saved successfully';
+        } else {
+            document.getElementById('message').textContent = 'Failed to save file';
         }
+    })
+    .catch(error => {
+        console.error('Error saving file:', error);
+        document.getElementById('message').textContent = 'Error saving file: ' + error.message;
+    });
+}
 
         // Function to load file from GitHub Gist
         function loadFromGist() {
