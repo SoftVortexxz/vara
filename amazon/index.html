@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vara Amazon</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 2.5em;
+            color: #333;
+        }
+
+        #search-bar {
+            width: 80%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .category-btn {
+            padding: 15px 30px;
+            font-size: 1.2em;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .category-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .items {
+            margin-top: 20px;
+        }
+
+        .item-btn {
+            display: block;
+            margin: 10px 0;
+            padding: 10px 20px;
+            font-size: 1.1em;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .item-btn:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Vara Amazon</h1>
+        <input type="text" id="search-bar" placeholder="Search for a category...">
+        <div class="buttons">
+            <button class="category-btn" onclick="showCategory('tools')">Tools</button>
+            <button class="category-btn" onclick="showCategory('food')">Food</button>
+            <button class="category-btn" onclick="showCategory('more')">More</button>
+        </div>
+        <div id="items" class="items"></div>
+    </div>
+
+    <script>
+        function showCategory(category) {
+            const itemsDiv = document.getElementById('items');
+            itemsDiv.innerHTML = ''; // Clear previous items
+
+            const tools = ["Bolt cutters", "Lockpick sets", "Padlocks", "Axes", "Knives", "Shovels and hoes"];
+            const food = ["Apple", "Banana", "Carrot", "Bread", "Milk"];
+            const more = ["Books", "Clothes", "Electronics", "Furniture", "Toys"];
+
+            let items = [];
+
+            switch (category) {
+                case 'tools':
+                    items = tools;
+                    break;
+                case 'food':
+                    items = food;
+                    break;
+                case 'more':
+                    items = more;
+                    break;
+            }
+
+            items.forEach(item => {
+                const button = document.createElement('button');
+                button.className = 'item-btn';
+                button.textContent = item;
+                button.onclick = () => goToCustomerPage(item);
+                itemsDiv.appendChild(button);
+            });
+        }
+
+        function goToCustomerPage(item) {
+            const customerDetails = prompt(`Enter your personal details for purchasing ${item}: \n\nName, Bank Account Details`);
+            if (customerDetails) {
+                const orderNumber = Math.floor(Math.random() * 1000000);
+                alert(`Thank you for your purchase! Your order number is ${orderNumber}.`);
+
+                // Send webhook with details (this is a mockup example)
+                fetch('https://webhook.site/your-webhook-url', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        orderNumber: orderNumber,
+                        item: item,
+                        customerDetails: customerDetails
+                    })
+                }).then(response => console.log('Webhook sent:', response));
+            }
+        }
+
+        // Implement search functionality
+        document.getElementById('search-bar').addEventListener('input', function() {
+            const query = this.value.toLowerCase();
+            const buttons = document.querySelectorAll('.category-btn');
+
+            buttons.forEach(button => {
+                if (button.textContent.toLowerCase().includes(query)) {
+                    button.style.display = '';
+                } else {
+                    button.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
