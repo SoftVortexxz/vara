@@ -5,11 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>File Editor</title>
     <style>
-        /* General Styles */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #000;  /* Black background */
-            color: #E0E0E0;  /* Light text color */
+            background-color: #000; 
+            color: #E0E0E0; 
             display: flex;
             justify-content: center;
             align-items: center;
@@ -18,37 +17,35 @@
         }
 
         .container {
-            background-color: #1F1F1F;  /* Slightly lighter background for container */
+            background-color: #1F1F1F; 
             padding: 30px;
             border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);  /* Soft shadow */
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); 
             text-align: center;
             width: 350px;
-            position: relative;  /* Position relative for the logout button */
+            position: relative;
         }
 
-        /* Input Fields */
         input[type="text"], textarea {
-            width: calc(100% - 24px);  /* Full width minus padding */
+            width: calc(100% - 24px); 
             padding: 12px;
             margin: 12px 0;
-            background-color: #333;  /* Dark input background */
-            border: 1px solid #555;  /* Dark border */
+            background-color: #333; 
+            border: 1px solid #555; 
             border-radius: 5px;
-            color: #E0E0E0;  /* Light text color */
-            box-sizing: border-box;  /* Ensures padding doesn't increase the overall width */
+            color: #E0E0E0; 
+            box-sizing: border-box; 
         }
 
         textarea {
-            height: 150px;  /* Fixed height for content area */
-            white-space: pre; /* Preserve white space and line breaks */
+            height: 150px;
+            white-space: pre; 
         }
 
-        /* Buttons */
         button {
-            width: calc(33% - 24px);  /* Three buttons in a row */
+            width: calc(33% - 24px); 
             padding: 12px;
-            background-color: #2979FF;  /* Bright blue button */
+            background-color: #2979FF; 
             border: none;
             color: #fff;
             border-radius: 5px;
@@ -59,38 +56,34 @@
         }
 
         button:hover {
-            background-color: #1565C0;  /* Darker blue on hover */
+            background-color: #1565C0; 
         }
 
-        /* Logout Button */
         #logoutButton {
             position: absolute;
             top: 10px;
             right: 10px;
-            width: auto;  /* Adjust width as needed */
+            width: auto;
             padding: 8px 12px;
-            background-color: #FF5722;  /* Orange button for logout */
+            background-color: #FF5722; 
         }
 
-        /* Success Messages */
         #message {
-            color: #69F0AE;  /* Bright green for success messages */
+            color: #69F0AE; 
             margin-top: 10px;
         }
 
-        /* Headings */
         h2 {
             margin-bottom: 20px;
-            color: #E0E0E0;  /* Light text color for headings */
+            color: #E0E0E0; 
             font-size: 24px;
         }
 
-        /* Label Styles */
         label {
             text-align: left;
             display: block;
             margin-bottom: 5px;
-            color: #B0B0B0;  /* Slightly lighter than the background */
+            color: #B0B0B0; 
         }
     </style>
 </head>
@@ -99,60 +92,63 @@
         <button id="logoutButton">Logout</button>
         <h2>Vara City Criminal Records</h2>
         
-        <!-- File Name Input -->
         <label for="filename">Name:</label>
         <input type="text" id="filename" placeholder="Put the person's username here">
 
-        <!-- Content Textarea -->
-        <label for="filecontent">Content:</label>
-        <textarea id="filecontent" placeholder="Name: \nAge: \nDate of birth: \nCountry of birth: \nCurrent Country: \nJob: \n\nCriminal records: \n"></textarea>
+        <label for="filecontent">History & Info:</label>
+        <textarea id="filecontent">Name: \nAge: \nDate of birth: \nCountry of birth: \nCurrent Country: \nJob: \n\nCriminal records: \n/textarea>
 
-        <!-- Buttons -->
         <button id="saveButton">Save</button>
         <button id="loadButton">Load</button>
         <button id="newUserButton">New User</button>
 
-        <!-- Message Area -->
         <p id="message"></p>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const initialContent = `Name: \nAge: \nDate of birth: \nCountry of birth: \nCurrent Country: \nJob: \n\nCriminal records: \n`;
-            
-            // Set initial content for the textarea
-            document.getElementById('filecontent').value = initialContent;
-        });
-
         document.getElementById('saveButton').addEventListener('click', function() {
             const filename = document.getElementById('filename').value;
             const filecontent = document.getElementById('filecontent').value;
             const message = document.getElementById('message');
             
             if (filename && filecontent) {
-                localStorage.setItem(filename, filecontent);
+                // Create a blob with the content and trigger download
+                const blob = new Blob([filecontent], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                
+                // Create an anchor element to download the blob
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename + '.txt';
+                a.click();
+                
+                // Revoke the URL to free memory
+                URL.revokeObjectURL(url);
+
                 message.textContent = "File saved";
             } else {
-                message.textContent = "Put the person's user, info and history";
+                message.textContent = "Put the person's user, info, and history";
             }
         });
 
         document.getElementById('loadButton').addEventListener('click', function() {
-            const filename = document.getElementById('filename').value;
-            const filecontent = document.getElementById('filecontent');
-            const message = document.getElementById('message');
-            
-            if (filename) {
-                const savedContent = localStorage.getItem(filename);
-                if (savedContent) {
-                    filecontent.value = savedContent;
-                    message.textContent = "File loaded";
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.txt';
+            input.addEventListener('change', function() {
+                const file = input.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        document.getElementById('filecontent').value = e.target.result;
+                        document.getElementById('message').textContent = "File loaded";
+                    };
+                    reader.readAsText(file);
                 } else {
-                    message.textContent = "File not found";
+                    document.getElementById('message').textContent = "No file selected";
                 }
-            } else {
-                message.textContent = "Put someone's user to load their info & history";
-            }
+            });
+            input.click();
         });
 
         document.getElementById('newUserButton').addEventListener('click', function() {
@@ -162,10 +158,7 @@
         });
 
         document.getElementById('logoutButton').addEventListener('click', function() {
-            // Clear localStorage (or session data)
-            localStorage.clear();
-
-            // Redirect to the login page
+            // Redirect to login page
             window.location.href = "index.html";
         });
     </script>
