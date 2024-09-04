@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>File Editor</title>
+    <title>Vara City</title>
     <style>
         /* General Styles */
         body {
@@ -116,65 +116,57 @@
         <p id="message"></p>
     </div>
 
-    <script src="https://unpkg.com/dropbox/dist/Dropbox-sdk.min.js"></script>
     <script>
-        const ACCESS_TOKEN = 'sl.B8NtHcmrCmH-yaM7JymwGgHevCZ15SSvV5NYa_gBjqHyVsqiPY1m94wysvB2zlZJYNZT2bDjN_TWNx_yI42_vUMtio_P9ZkVfIpJu_yh8Ju_Pn66BV4FtDoL_a9kLjBl0QwL1T0UdPWI'; // Replace with your Dropbox access token
-        const dbx = new Dropbox.Dropbox({ accessToken: ACCESS_TOKEN });
-
         document.addEventListener('DOMContentLoaded', function() {
             const initialContent = `Name: \nAge: \nDate of birth: \nCountry of birth: \nCurrent Country: \nJob: \n\nCriminal records: \n`;
+            
+            // Set initial content for the textarea
             document.getElementById('filecontent').value = initialContent;
         });
 
         document.getElementById('saveButton').addEventListener('click', function() {
-            const filename = document.getElementById('filename').value + '.db';
+            const filename = document.getElementById('filename').value;
             const filecontent = document.getElementById('filecontent').value;
             const message = document.getElementById('message');
-
+            
             if (filename && filecontent) {
-                dbx.filesUpload({ path: `/vara/${filename}`, contents: filecontent })
-                    .then(function(response) {
-                        message.textContent = "File saved successfully.";
-                    })
-                    .catch(function(error) {
-                        message.textContent = "Error saving file: " + (error.response ? error.response.error_summary : error.message);
-                        console.error('Error saving file:', error);
-                    });
+                localStorage.setItem(filename, filecontent);
+                message.textContent = "File saved";
             } else {
-                message.textContent = "Please enter a username and content.";
+                message.textContent = "Put the person's user, info and history";
             }
         });
 
         document.getElementById('loadButton').addEventListener('click', function() {
-            const filename = document.getElementById('filename').value + '.db';
+            const filename = document.getElementById('filename').value;
+            const filecontent = document.getElementById('filecontent');
             const message = document.getElementById('message');
             
             if (filename) {
-                dbx.filesDownload({ path: `/vara/${filename}` })
-                    .then(function(response) {
-                        return response.fileBlob.text();
-                    })
-                    .then(function(text) {
-                        document.getElementById('filecontent').value = text;
-                        message.textContent = "File loaded successfully.";
-                    })
-                    .catch(function(error) {
-                        message.textContent = "Error loading file: " + (error.response ? error.response.error_summary : error.message);
-                        console.error('Error loading file:', error);
-                    });
+                const savedContent = localStorage.getItem(filename);
+                if (savedContent) {
+                    filecontent.value = savedContent;
+                    message.textContent = "File loaded";
+                } else {
+                    message.textContent = "File not found";
+                }
             } else {
-                message.textContent = "Please enter a username to load their info.";
+                message.textContent = "Put someone's user to load their info & history";
             }
         });
 
         document.getElementById('newUserButton').addEventListener('click', function() {
+            // Clear the filename input and content textarea
             document.getElementById('filename').value = '';
             document.getElementById('filecontent').value = `Name: \nAge: \nDate of birth: \nCountry of birth: \nCurrent Country: \nJob: \n\nCriminal records: \n`;
         });
 
         document.getElementById('logoutButton').addEventListener('click', function() {
-            // Handle logout by clearing access token or similar
-            alert('Logged out!');
+            // Clear localStorage (or session data)
+            localStorage.clear();
+
+            // Redirect to the login page
+            window.location.href = "index.html";
         });
     </script>
 </body>
