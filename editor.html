@@ -108,7 +108,7 @@
         <textarea id="filecontent" placeholder="Name: \nAge: \nDate of birth: \nCountry of birth: \nCurrent Country: \nJob: \n\nCriminal records: \n"></textarea>
 
         <!-- Buttons -->
-        <button id="saveButton">Save</button>
+        <button id="saveButton">b</button>
         <button id="loadButton">Load</button>
         <button id="newUserButton">New User</button>
 
@@ -139,7 +139,7 @@
                         message.textContent = "File saved successfully.";
                     })
                     .catch(function(error) {
-                        message.textContent = "Error saving file: " + error.message;
+                        message.textContent = "Error saving file: " + error.response ? error.response.error_summary : error.message;
                         console.error('Error saving file:', error);
                     });
             } else {
@@ -161,7 +161,7 @@
                         message.textContent = "File loaded successfully.";
                     })
                     .catch(function(error) {
-                        message.textContent = "Error loading file: " + error.message;
+                        message.textContent = "Error loading file: " + error.response ? error.response.error_summary : error.message;
                         console.error('Error loading file:', error);
                     });
             } else {
