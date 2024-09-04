@@ -9,10 +9,6 @@
         body {
             font-family: 'Arial', sans-serif;
             color: #E0E0E0; /* Light text color */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
             margin: 0;
             overflow: hidden;
             background: linear-gradient(135deg, #1a1a1a, #333333); /* Gradient background */
@@ -26,6 +22,42 @@
             100% { background-position: 0% 0%; }
         }
 
+        .sidebar {
+            background-color: #1E1E1E; /* Sidebar background */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 60px;
+            padding: 0 20px;
+            position: relative;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); /* Subtle shadow */
+            width: 100%;
+        }
+
+        .sidebar h2 {
+            margin: 0;
+            color: #E0E0E0; /* Light text color */
+            font-size: 24px;
+            text-align: center;
+        }
+
+        .logout-button {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            background-color: #FF5722; /* Orange button for logout */
+            border: none;
+            color: #fff;
+            border-radius: 6px;
+            cursor: pointer;
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+
+        .logout-button:hover {
+            background-color: #E64A19; /* Darker orange on hover */
+        }
+
         .container {
             background-color: #1E1E1E; /* Slightly lighter background for container */
             padding: 40px;
@@ -33,7 +65,7 @@
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.6); /* Enhanced shadow */
             text-align: center;
             width: 400px;
-            position: relative;
+            margin: 20px auto; /* Center container */
         }
 
         /* Input Fields */
@@ -73,36 +105,11 @@
             transform: scale(1.05);
         }
 
-        /* Logout Button */
-        #logoutButton {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: #FF5722; /* Orange button for logout */
-            border: none;
-            color: #fff;
-            border-radius: 6px;
-            cursor: pointer;
-            padding: 8px 16px;
-            font-size: 14px;
-        }
-
-        #logoutButton:hover {
-            background-color: #E64A19; /* Darker orange on hover */
-        }
-
         /* Success Messages */
         #message {
             color: #76FF03; /* Bright green for success messages */
             margin-top: 10px;
             font-size: 16px;
-        }
-
-        /* Headings */
-        h2 {
-            margin-bottom: 20px;
-            color: #E0E0E0; /* Light text color for headings */
-            font-size: 28px;
         }
 
         /* Label Styles */
@@ -116,10 +123,11 @@
     </style>
 </head>
 <body>
-    <div class="container editor-container">
-        <button id="logoutButton">Logout</button>
+    <div class="sidebar">
+        <button class="logout-button" id="logoutButton">Logout</button>
         <h2>Vara City Criminal Records</h2>
-        
+    </div>
+    <div class="container editor-container">
         <!-- File Name Input -->
         <label for="filename">Name:</label>
         <input type="text" id="filename" placeholder="Enter username">
