@@ -5,10 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>File Editor</title>
     <style>
+        /* General Styles */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #000; 
-            color: #E0E0E0; 
+            background-color: #000;  /* Black background */
+            color: #E0E0E0;  /* Light text color */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -17,73 +18,77 @@
         }
 
         .container {
-            background-color: #1F1F1F; 
+            background-color: #1F1F1F;  /* Slightly lighter background for container */
             padding: 30px;
             border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); 
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);  /* Soft shadow */
             text-align: center;
             width: 350px;
-            position: relative;
+            position: relative; /* For absolute positioning of the logout button */
         }
 
+        /* Input Fields */
         input[type="text"], textarea {
-            width: calc(100% - 24px); 
+            width: calc(100% - 24px);  /* Full width minus padding */
             padding: 12px;
             margin: 12px 0;
-            background-color: #333; 
-            border: 1px solid #555; 
+            background-color: #333;  /* Dark input background */
+            border: 1px solid #555;  /* Dark border */
             border-radius: 5px;
-            color: #E0E0E0; 
-            box-sizing: border-box; 
+            color: #E0E0E0;  /* Light text color */
+            box-sizing: border-box;  /* Ensures padding doesn't increase the overall width */
         }
 
         textarea {
-            height: 150px;
-            white-space: pre; 
+            height: 150px;  /* Fixed height for content area */
+            white-space: pre-wrap; /* Preserve whitespace */
         }
 
+        /* Buttons */
         button {
-            width: calc(33% - 24px); 
+            width: calc(33% - 16px);  /* Adjust width for spacing */
             padding: 12px;
-            background-color: #2979FF; 
+            background-color: #2979FF;  /* Bright blue button */
             border: none;
             color: #fff;
             border-radius: 5px;
             cursor: pointer;
-            margin: 12px 4px;
+            margin: 10px 5px;  /* Margin between buttons */
             font-weight: bold;
             transition: background-color 0.3s;
+            display: inline-block;  /* Align buttons horizontally */
         }
 
         button:hover {
-            background-color: #1565C0; 
+            background-color: #1565C0;  /* Darker blue on hover */
         }
 
-        #logoutButton {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: auto;
-            padding: 8px 12px;
-            background-color: #FF5722; 
-        }
-
+        /* Success Messages */
         #message {
-            color: #69F0AE; 
+            color: #69F0AE;  /* Bright green for success messages */
             margin-top: 10px;
         }
 
+        /* Headings */
         h2 {
             margin-bottom: 20px;
-            color: #E0E0E0; 
+            color: #E0E0E0;  /* Light text color for headings */
             font-size: 24px;
         }
 
+        /* Label Styles */
         label {
             text-align: left;
             display: block;
             margin-bottom: 5px;
-            color: #B0B0B0; 
+            color: #B0B0B0;  /* Slightly lighter than the background */
+        }
+
+        /* Logout Button */
+        #logoutButton {
+            position: absolute;
+            top: 10px;
+            right: 10px;
         }
     </style>
 </head>
@@ -92,39 +97,44 @@
         <button id="logoutButton">Logout</button>
         <h2>Vara City Criminal Records</h2>
         
+        <!-- File Name Input -->
         <label for="filename">Name:</label>
-        <input type="text" id="filename" placeholder="Put the person's username here">
+        <input type="text" id="filename" placeholder="Put a person's username here">
 
+        <!-- Content Textarea -->
         <label for="filecontent">History & Info:</label>
-        <textarea id="filecontent">Name: \nAge: \nDate of birth: \nCountry of birth: \nCurrent Country: \nJob: \n\nCriminal records: \n/textarea>
+        <textarea id="filecontent">Name: \nAge: \nDate of birth: \nCountry of birth: \nCurrent Country: \nJob: \n\nCriminal records: \n</textarea>
 
+        <!-- Buttons -->
         <button id="saveButton">Save</button>
         <button id="loadButton">Load</button>
         <button id="newUserButton">New User</button>
 
+        <!-- Message Area -->
         <p id="message"></p>
     </div>
 
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const initialContent = `Name: \nAge: \nDate of birth: \nCountry of birth: \nCurrent Country: \nJob: \n\nCriminal records: \n`;
+            document.getElementById('filecontent').value = initialContent;
+        });
+
         document.getElementById('saveButton').addEventListener('click', function() {
-            const filename = document.getElementById('filename').value;
+            const filename = document.getElementById('filename').value.trim();
             const filecontent = document.getElementById('filecontent').value;
             const message = document.getElementById('message');
             
             if (filename && filecontent) {
-                // Create a blob with the content and trigger download
                 const blob = new Blob([filecontent], { type: 'text/plain' });
                 const url = URL.createObjectURL(blob);
-                
-                // Create an anchor element to download the blob
                 const a = document.createElement('a');
                 a.href = url;
                 a.download = filename + '.txt';
+                document.body.appendChild(a);
                 a.click();
-                
-                // Revoke the URL to free memory
+                document.body.removeChild(a);
                 URL.revokeObjectURL(url);
-
                 message.textContent = "File saved";
             } else {
                 message.textContent = "Put the person's user, info, and history";
@@ -152,13 +162,11 @@
         });
 
         document.getElementById('newUserButton').addEventListener('click', function() {
-            // Clear the filename input and content textarea
             document.getElementById('filename').value = '';
             document.getElementById('filecontent').value = `Name: \nAge: \nDate of birth: \nCountry of birth: \nCurrent Country: \nJob: \n\nCriminal records: \n`;
         });
 
         document.getElementById('logoutButton').addEventListener('click', function() {
-            // Redirect to login page
             window.location.href = "index.html";
         });
     </script>
