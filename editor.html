@@ -30,9 +30,11 @@
             justify-content: center;
             height: 60px;
             padding: 0 20px;
-            position: relative;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); /* Subtle shadow */
+            position: fixed; /* Fixed position for the sidebar */
+            top: 0;
+            left: 0;
             width: 100%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); /* Subtle shadow */
         }
 
         .sidebar h2 {
@@ -45,7 +47,7 @@
         .logout-button {
             position: absolute;
             top: 10px;
-            right: 80px; /* Move the button a bit to the left */
+            right: 20px; /* Adjusted to move the button to the left */
             background-color: #FF5722; /* Orange button for logout */
             border: none;
             color: #fff;
@@ -66,10 +68,7 @@
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.6); /* Enhanced shadow */
             text-align: center;
             width: 400px;
-            margin: 0 auto; /* Center container horizontally */
-            position: relative;
-            top: 50%; /* Center container vertically */
-            transform: translateY(-50%); /* Adjust vertical centering */
+            margin: 80px auto 0 auto; /* Center container horizontally and adjust top margin */
         }
 
         /* Input Fields */
