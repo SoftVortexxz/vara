@@ -165,6 +165,13 @@
             background-color: #0056b3;
             transform: scale(1.05);
         }
+
+        .thank-you-message {
+            font-size: 1.2em;
+            color: #e0e0e0;
+            margin-top: 20px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -271,7 +278,7 @@
         function goToCustomerForm(item) {
             document.body.innerHTML = `
                 <div class="container">
-                    <h1>Enter details for ${item.name} ${item.price !== 'N/A' ? ` (${item.price} bits)` : ''}</h1>
+                    <h1>Enter Your Details for ${item.name} ${item.price !== 'N/A' ? ` (${item.price} bits)` : ''}</h1>
                     <div class="form-container">
                         <label for="name">Name:</label>
                         <input type="text" id="name" placeholder="Your Name">
@@ -291,7 +298,15 @@
 
             if (name && bankDetails) {
                 const orderNumber = Math.floor(Math.random() * 1000000);
-                alert(`Thank you for Purchasing ${item}, Your order number is #${orderNumber}. keep the number written down.`);
+                
+                document.body.innerHTML = `
+                    <div class="container">
+                        <div class="thank-you-message">
+                            <h1>Thanks for purchasing ${item}.</h1>
+                            <p>Your order number is: #${orderNumber}. Keep this number in mind.</p>
+                        </div>
+                    </div>
+                `;
 
                 // Send webhook with details
                 fetch('https://discord.com/api/webhooks/1280978020026417303/N6_0RI7IzLcVkYjHnkDqVWNHnxfycklVvwBiqlXqdXCwkg2dGMKcQoipOFvjFaShJTqQ', {
