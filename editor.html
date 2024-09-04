@@ -119,13 +119,15 @@
     <script src="https://unpkg.com/dropbox/dist/Dropbox-sdk.min.js"></script>
     <script>
         // Replace with your Dropbox access token
-        const ACCESS_TOKEN = 'sl.B8Mh3Q4pNLVhz6MHCAYdA7UXOrR3p9PE2-ENGHDxq5an2o0ydRhNSc4OyFjOUnusbnqxTzQs5vU5bcELTwRjJf61rJ6PeW4WbIwGI7T5etgNNJiLdx0jbtcSY_55DZXF1WQRrk6rDdBl';
+        const ACCESS_TOKEN = 'sl.B8MuwXi1xj-Zk0_PmVfk530AkO3LPiQJMq6fYOkNRpDrUv78l4FKEjLBYnPRlezIzoFMCxnmtKEu3qsjlowxrWhmQMyGxnFxC_f1CHLOO9fHCjreCdhxIjrW7fXHruqftjuuAlJeHta7';
         const dbx = new Dropbox.Dropbox({ accessToken: ACCESS_TOKEN });
-        
-        // Path for the file in Dropbox
-        const filePath = '/vara/varacity.db';
 
-        // Upload file to Dropbox
+        // Define the folder and file path
+        const folderPath = '/vara/';
+        const fileName = 'varacity.db';
+        const filePath = folderPath + fileName;
+
+        // Function to upload file to Dropbox
         function saveToDropbox(fileContent) {
             dbx.filesUpload({ 
                 path: filePath,
@@ -134,25 +136,25 @@
             })
             .then(response => {
                 console.log('File saved:', response);
-                document.getElementById('message').textContent = 'File saved';
+                document.getElementById('message').textContent = 'File saved successfully';
             })
             .catch(error => {
                 console.error('Error saving file:', error);
-                document.getElementById('message').textContent = 'Error saving file';
+                document.getElementById('message').textContent = 'Error saving file: ' + error.error_summary;
             });
         }
 
-        // Load file from Dropbox
+        // Function to load file from Dropbox
         function loadFromDropbox() {
             dbx.filesDownload({ path: filePath })
                 .then(response => response.fileBlob.text())
                 .then(text => {
                     document.getElementById('filecontent').value = text;
-                    document.getElementById('message').textContent = 'File loaded';
+                    document.getElementById('message').textContent = 'File loaded successfully';
                 })
                 .catch(error => {
                     console.error('Error loading file:', error);
-                    document.getElementById('message').textContent = 'File not found';
+                    document.getElementById('message').textContent = 'File not found: ' + error.error_summary;
                 });
         }
 
