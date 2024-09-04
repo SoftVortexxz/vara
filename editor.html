@@ -23,7 +23,7 @@
             border-radius: 10px;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);  /* Soft shadow */
             text-align: center;
-            width: 350px;
+            width: 400px;
             position: relative; /* For absolute positioning of the logout button */
         }
 
@@ -40,7 +40,7 @@
         }
 
         textarea {
-            height: 150px;  /* Fixed height for content area */
+            height: 200px;  /* Fixed height for content area */
             white-space: pre-wrap; /* Preserve whitespace */
         }
 
@@ -93,16 +93,16 @@
     </style>
 </head>
 <body>
-    <div class="container editor-container">
+    <div class="container">
         <button id="logoutButton">Logout</button>
         <h2>Vara City Criminal Records</h2>
         
         <!-- File Name Input -->
         <label for="filename">Name:</label>
-        <input type="text" id="filename" placeholder="Put a person's username here">
+        <input type="text" id="filename" placeholder="Put file name here">
 
         <!-- Content Textarea -->
-        <label for="filecontent">History & Info:</label>
+        <label for="filecontent">Content:</label>
         <textarea id="filecontent">Name: \nAge: \nDate of birth: \nCountry of birth: \nCurrent Country: \nJob: \n\nCriminal records: \n</textarea>
 
         <!-- Buttons -->
