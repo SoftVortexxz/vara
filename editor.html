@@ -3,53 +3,184 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dropbox File Upload</title>
-    <script src="https://unpkg.com/dropbox/dist/Dropbox-sdk.min.js"></script>
+    <title>File Editor</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #000;  /* Black background */
+            color: #E0E0E0;  /* Light text color */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #1F1F1F;  /* Slightly lighter background for container */
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);  /* Soft shadow */
+            text-align: center;
+            width: 350px;
+            position: relative;  /* Position relative for the logout button */
+        }
+
+        /* Input Fields */
+        input[type="text"], textarea {
+            width: calc(100% - 24px);  /* Full width minus padding */
+            padding: 12px;
+            margin: 12px 0;
+            background-color: #333;  /* Dark input background */
+            border: 1px solid #555;  /* Dark border */
+            border-radius: 5px;
+            color: #E0E0E0;  /* Light text color */
+            box-sizing: border-box;  /* Ensures padding doesn't increase the overall width */
+        }
+
+        textarea {
+            height: 150px;  /* Fixed height for content area */
+            white-space: pre; /* Preserve white space and line breaks */
+        }
+
+        /* Buttons */
+        button {
+            width: calc(33% - 24px);  /* Three buttons in a row */
+            padding: 12px;
+            background-color: #2979FF;  /* Bright blue button */
+            border: none;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 12px 4px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #1565C0;  /* Darker blue on hover */
+        }
+
+        /* Logout Button */
+        #logoutButton {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: auto;  /* Adjust width as needed */
+            padding: 8px 12px;
+            background-color: #FF5722;  /* Orange button for logout */
+        }
+
+        /* Success Messages */
+        #message {
+            color: #69F0AE;  /* Bright green for success messages */
+            margin-top: 10px;
+        }
+
+        /* Headings */
+        h2 {
+            margin-bottom: 20px;
+            color: #E0E0E0;  /* Light text color for headings */
+            font-size: 24px;
+        }
+
+        /* Label Styles */
+        label {
+            text-align: left;
+            display: block;
+            margin-bottom: 5px;
+            color: #B0B0B0;  /* Slightly lighter than the background */
+        }
+    </style>
 </head>
 <body>
-    <h1>Upload File to Dropbox</h1>
-    <input type="file" id="fileInput">
-    <button id="uploadButton">Upload</button>
-    <div id="fileLinks"></div>
+    <div class="container editor-container">
+        <button id="logoutButton">Logout</button>
+        <h2>Vara City Criminal Records</h2>
+        
+        <!-- File Name Input -->
+        <label for="filename">Name:</label>
+        <input type="text" id="filename" placeholder="Put the person's username here">
 
+        <!-- Content Textarea -->
+        <label for="filecontent">Content:</label>
+        <textarea id="filecontent" placeholder="Name: \nAge: \nDate of birth: \nCountry of birth: \nCurrent Country: \nJob: \n\nCriminal records: \n"></textarea>
+
+        <!-- Buttons -->
+        <button id="saveButton">Save</button>
+        <button id="loadButton">Load</button>
+        <button id="newUserButton">New User</button>
+
+        <!-- Message Area -->
+        <p id="message"></p>
+    </div>
+
+    <script src="https://unpkg.com/dropbox/dist/Dropbox-sdk.min.js"></script>
     <script>
+        // Replace with your Dropbox access token
         const ACCESS_TOKEN = 'sl.B8Mh3Q4pNLVhz6MHCAYdA7UXOrR3p9PE2-ENGHDxq5an2o0ydRhNSc4OyFjOUnusbnqxTzQs5vU5bcELTwRjJf61rJ6PeW4WbIwGI7T5etgNNJiLdx0jbtcSY_55DZXF1WQRrk6rDdBl';
         const dbx = new Dropbox.Dropbox({ accessToken: ACCESS_TOKEN });
+        
+        // Path for the file in Dropbox
+        const filePath = '/vara/varacity.db';
 
-        document.getElementById('uploadButton').addEventListener('click', function() {
-            const fileInput = document.getElementById('fileInput');
-            const file = fileInput.files[0];
+        // Upload file to Dropbox
+        function saveToDropbox(fileContent) {
+            dbx.filesUpload({ 
+                path: filePath,
+                contents: fileContent,
+                mode: 'overwrite'
+            })
+            .then(response => {
+                console.log('File saved:', response);
+                document.getElementById('message').textContent = 'File saved';
+            })
+            .catch(error => {
+                console.error('Error saving file:', error);
+                document.getElementById('message').textContent = 'Error saving file';
+            });
+        }
 
-            if (file) {
-                dbx.filesUpload({ path: '/' + file.name, contents: file })
-                    .then(response => {
-                        console.log('File uploaded:', response);
-                        listFiles();
-                    })
-                    .catch(error => {
-                        console.error('Error uploading file:', error);
-                    });
+        // Load file from Dropbox
+        function loadFromDropbox() {
+            dbx.filesDownload({ path: filePath })
+                .then(response => response.fileBlob.text())
+                .then(text => {
+                    document.getElementById('filecontent').value = text;
+                    document.getElementById('message').textContent = 'File loaded';
+                })
+                .catch(error => {
+                    console.error('Error loading file:', error);
+                    document.getElementById('message').textContent = 'File not found';
+                });
+        }
+
+        // Event listener for the save button
+        document.getElementById('saveButton').addEventListener('click', function() {
+            const filecontent = document.getElementById('filecontent').value;
+            if (filecontent) {
+                saveToDropbox(filecontent);
+            } else {
+                document.getElementById('message').textContent = 'Content cannot be empty';
             }
         });
 
-        function listFiles() {
-            dbx.filesListFolder({ path: '' })
-                .then(response => {
-                    const fileLinks = document.getElementById('fileLinks');
-                    fileLinks.innerHTML = '';
-                    response.entries.forEach(file => {
-                        const link = document.createElement('a');
-                        link.href = 'https://www.dropbox.com/home' + file.path_display;
-                        link.textContent = file.name;
-                        link.target = '_blank';
-                        fileLinks.appendChild(link);
-                        fileLinks.appendChild(document.createElement('br'));
-                    });
-                })
-                .catch(error => {
-                    console.error('Error listing files:', error);
-                });
-        }
+        // Event listener for the load button
+        document.getElementById('loadButton').addEventListener('click', function() {
+            loadFromDropbox();
+        });
+
+        // Event listener for the new user button
+        document.getElementById('newUserButton').addEventListener('click', function() {
+            document.getElementById('filename').value = '';
+            document.getElementById('filecontent').value = `Name: \nAge: \nDate of birth: \nCountry of birth: \nCurrent Country: \nJob: \n\nCriminal records: \n`;
+        });
+
+        // Event listener for the logout button
+        document.getElementById('logoutButton').addEventListener('click', function() {
+            window.location.href = "index.html";
+        });
     </script>
 </body>
 </html>
