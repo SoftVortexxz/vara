@@ -116,45 +116,50 @@
         <p id="message"></p>
     </div>
 
-    <script src="https://unpkg.com/dropbox/dist/Dropbox-sdk.min.js"></script>
     <script>
-        // Replace with your Dropbox access token
-        const ACCESS_TOKEN = 'sl.B8MuwXi1xj-Zk0_PmVfk530AkO3LPiQJMq6fYOkNRpDrUv78l4FKEjLBYnPRlezIzoFMCxnmtKEu3qsjlowxrWhmQMyGxnFxC_f1CHLOO9fHCjreCdhxIjrW7fXHruqftjuuAlJeHta7';
-        const dbx = new Dropbox.Dropbox({ accessToken: ACCESS_TOKEN });
+        // Replace with your GitHub Personal Access Token
+        const GITHUB_TOKEN = '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';
+        const GIST_ID = 'a0b6c39f6db05949aa84e58051bb9fe3'; // Gist ID where you want to store the file
 
-        // Define the folder and file path
-        const folderPath = '/vara/';
-        const fileName = 'varacity.db';
-        const filePath = folderPath + fileName;
-
-        // Function to upload file to Dropbox
-        function saveToDropbox(fileContent) {
-            dbx.filesUpload({ 
-                path: filePath,
-                contents: fileContent,
-                mode: 'overwrite'
+        // Function to save file to GitHub Gist
+        function saveToGist(fileContent) {
+            fetch(`https://api.github.com/gists/${GIST_ID}`, {
+                method: 'PATCH',
+                headers: {
+                    'Authorization': `token ${GITHUB_TOKEN}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    files: {
+                        'varacity.db': {
+                            content: fileContent
+                        }
+                    }
+                })
             })
-            .then(response => {
-                console.log('File saved:', response);
+            .then(response => response.json())
+            .then(data => {
+                console.log('File saved:', data);
                 document.getElementById('message').textContent = 'File saved successfully';
             })
             .catch(error => {
                 console.error('Error saving file:', error);
-                document.getElementById('message').textContent = 'Error saving file: ' + error.error_summary;
+                document.getElementById('message').textContent = 'Error saving file: ' + error.message;
             });
         }
 
-        // Function to load file from Dropbox
-        function loadFromDropbox() {
-            dbx.filesDownload({ path: filePath })
-                .then(response => response.fileBlob.text())
-                .then(text => {
-                    document.getElementById('filecontent').value = text;
+        // Function to load file from GitHub Gist
+        function loadFromGist() {
+            fetch(`https://api.github.com/gists/${GIST_ID}`)
+                .then(response => response.json())
+                .then(data => {
+                    const fileContent = data.files['varacity.db'].content;
+                    document.getElementById('filecontent').value = fileContent;
                     document.getElementById('message').textContent = 'File loaded successfully';
                 })
                 .catch(error => {
                     console.error('Error loading file:', error);
-                    document.getElementById('message').textContent = 'File not found: ' + error.error_summary;
+                    document.getElementById('message').textContent = 'File not found: ' + error.message;
                 });
         }
 
@@ -162,7 +167,7 @@
         document.getElementById('saveButton').addEventListener('click', function() {
             const filecontent = document.getElementById('filecontent').value;
             if (filecontent) {
-                saveToDropbox(filecontent);
+                saveToGist(filecontent);
             } else {
                 document.getElementById('message').textContent = 'Content cannot be empty';
             }
@@ -170,7 +175,7 @@
 
         // Event listener for the load button
         document.getElementById('loadButton').addEventListener('click', function() {
-            loadFromDropbox();
+            loadFromGist();
         });
 
         // Event listener for the new user button
