@@ -1,87 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vara City</title>
     <title>File Editor</title>
     <style>
         /* General Styles */
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #000;  /* Black background */
-            color: #E0E0E0;  /* Light text color */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        .container {
-            background-color: #1F1F1F;  /* Slightly lighter background for container */
-            padding: 30px;
-            border-radius: 10px;
+@@ -24,6 +24,7 @@
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);  /* Soft shadow */
             text-align: center;
-            width: 400px;
-            position: relative; /* For absolute positioning of the logout button */
+            width: 350px;
+            position: relative;  /* Position relative for the logout button */
         }
 
         /* Input Fields */
-        input[type="text"], textarea {
-            width: calc(100% - 24px);  /* Full width minus padding */
-            padding: 12px;
-            margin: 12px 0;
-            background-color: #333;  /* Dark input background */
-            border: 1px solid #555;  /* Dark border */
-            border-radius: 5px;
-            color: #E0E0E0;  /* Light text color */
-            box-sizing: border-box;  /* Ensures padding doesn't increase the overall width */
-        }
-
-        textarea {
-            height: 200px;  /* Fixed height for content area */
-            white-space: pre-wrap; /* Preserve whitespace */
-        }
-
-        /* Buttons */
-        button {
-            width: calc(33% - 16px);  /* Adjust width for spacing */
-            padding: 12px;
-            background-color: #2979FF;  /* Bright blue button */
-            border: none;
-            color: #fff;
-            border-radius: 5px;
-            cursor: pointer;
-            margin: 10px 5px;  /* Margin between buttons */
-            font-weight: bold;
-            transition: background-color 0.3s;
-            display: inline-block;  /* Align buttons horizontally */
-        }
-
-        button:hover {
+@@ -61,6 +62,16 @@
             background-color: #1565C0;  /* Darker blue on hover */
-        }
-
-        /* Success Messages */
-        #message {
-            color: #69F0AE;  /* Bright green for success messages */
-            margin-top: 10px;
-        }
-
-        /* Headings */
-        h2 {
-            margin-bottom: 20px;
-            color: #E0E0E0;  /* Light text color for headings */
-            font-size: 24px;
-        }
-
-        /* Label Styles */
-        label {
-            text-align: left;
-            display: block;
-            margin-bottom: 5px;
-            color: #B0B0B0;  /* Slightly lighter than the background */
         }
 
         /* Logout Button */
@@ -89,84 +23,42 @@
             position: absolute;
             top: 10px;
             right: 10px;
+            width: auto;  /* Adjust width as needed */
+            padding: 8px 12px;
+            background-color: #FF5722;  /* Orange button for logout */
         }
-    </style>
+
+        /* Success Messages */
+        #message {
+            color: #69F0AE;  /* Bright green for success messages */
+@@ -85,14 +96,15 @@
 </head>
 <body>
-    <div class="container">
+    <div class="container editor-container">
         <button id="logoutButton">Logout</button>
         <h2>Vara City Criminal Records</h2>
-        
+
         <!-- File Name Input -->
         <label for="filename">Name:</label>
         <input type="text" id="filename" placeholder="Put file name here">
+        <input type="text" id="filename" placeholder="Put the person's username here">
 
         <!-- Content Textarea -->
+        <label for="filecontent">History & Info:</label>
         <label for="filecontent">Content:</label>
-        <textarea id="filecontent">Name: \nAge: \nDate of birth: \nCountry of birth: \nCurrent Country: \nJob: \n\nCriminal records: \n</textarea>
+        <textarea id="filecontent" placeholder="Name: \nAge: \nDate of birth: \nCountry of birth: \nCurrent Country: \nJob: \n\nCriminal records: \n"></textarea>
 
         <!-- Buttons -->
-        <button id="saveButton">Save</button>
-        <button id="loadButton">Load</button>
-        <button id="newUserButton">New User</button>
-
-        <!-- Message Area -->
-        <p id="message"></p>
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const initialContent = `Name: \nAge: \nDate of birth: \nCountry of birth: \nCurrent Country: \nJob: \n\nCriminal records: \n`;
-            document.getElementById('filecontent').value = initialContent;
-        });
-
-        document.getElementById('saveButton').addEventListener('click', function() {
-            const filename = document.getElementById('filename').value.trim();
-            const filecontent = document.getElementById('filecontent').value;
-            const message = document.getElementById('message');
-            
-            if (filename && filecontent) {
-                const blob = new Blob([filecontent], { type: 'text/plain' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = filename + '.txt';
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-                message.textContent = "File saved";
-            } else {
-                message.textContent = "Put the person's user, info, and history";
-            }
-        });
-
-        document.getElementById('loadButton').addEventListener('click', function() {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = '.txt';
-            input.addEventListener('change', function() {
-                const file = input.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        document.getElementById('filecontent').value = e.target.result;
-                        document.getElementById('message').textContent = "File loaded";
-                    };
-                    reader.readAsText(file);
-                } else {
-                    document.getElementById('message').textContent = "No file selected";
-                }
-            });
-            input.click();
-        });
-
-        document.getElementById('newUserButton').addEventListener('click', function() {
+@@ -148,6 +160,14 @@ <h2>Vara City Criminal Records</h2>
             document.getElementById('filename').value = '';
             document.getElementById('filecontent').value = `Name: \nAge: \nDate of birth: \nCountry of birth: \nCurrent Country: \nJob: \n\nCriminal records: \n`;
         });
 
         document.getElementById('logoutButton').addEventListener('click', function() {
+            // Clear localStorage (or session data)
+            localStorage.clear();
+
+            // Redirect to the login page
             window.location.href = "index.html";
         });
     </script>
