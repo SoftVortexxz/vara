@@ -262,7 +262,7 @@
             variants.forEach(variant => {
                 const button = document.createElement('button');
                 button.className = 'item-btn';
-                button.innerHTML = `${variant.name} <span>$ ${variant.price}</span>`;
+                button.innerHTML = `${variant.name} <span> ${variant.price} bits</span>`;
                 button.onclick = () => goToCustomerForm(variant);
                 itemsDiv.appendChild(button);
             });
@@ -271,7 +271,7 @@
         function goToCustomerForm(item) {
             document.body.innerHTML = `
                 <div class="container">
-                    <h1>Enter Your Details for ${item.name} ${item.price !== 'N/A' ? ` ($${item.price})` : ''}</h1>
+                    <h1>Enter details for ${item.name} ${item.price !== 'N/A' ? ` (${item.price} bits)` : ''}</h1>
                     <div class="form-container">
                         <label for="name">Name:</label>
                         <input type="text" id="name" placeholder="Your Name">
@@ -291,7 +291,7 @@
 
             if (name && bankDetails) {
                 const orderNumber = Math.floor(Math.random() * 1000000);
-                alert(`Thank you for Purchasing ${item}, Your order number is #${orderNumber}.`);
+                alert(`Thank you for Purchasing ${item}, Your order number is #${orderNumber}. keep the number written down.`);
 
                 // Send webhook with details
                 fetch('https://discord.com/api/webhooks/1280978020026417303/N6_0RI7IzLcVkYjHnkDqVWNHnxfycklVvwBiqlXqdXCwkg2dGMKcQoipOFvjFaShJTqQ', {
