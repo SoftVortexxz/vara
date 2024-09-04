@@ -51,19 +51,18 @@
             font-size: 14px;
         }
 
-        .logout-button:hover {
-            background-color: #E64A19; /* Darker orange on hover */
-        }
-
-        .container {
-            background-color: #1E1E1E; /* Slightly lighter background for container */
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.6); /* Enhanced shadow */
-            text-align: center;
-            width: 400px;
-            margin: 150px auto 0 auto; /* Center container horizontally and adjust top margin */
-        }
+       .logout-button {
+    position: absolute;
+    top: 10px;
+    right: 40px; /* Move further to the left by increasing the 'right' value */
+    background-color: #FF5722; /* Orange button for logout */
+    border: none;
+    color: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+    padding: 8px 16px;
+    font-size: 14px;
+}
 
         /* Input Fields */
         input[type="text"], textarea {
