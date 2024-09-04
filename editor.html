@@ -136,10 +136,11 @@
             if (filename && filecontent) {
                 dbx.filesUpload({ path: `/vara/${filename}`, contents: filecontent })
                     .then(function(response) {
-                        message.textContent = "File saved. File ID: " + response.result.id;
+                        message.textContent = "File saved successfully.";
                     })
                     .catch(function(error) {
-                        message.textContent = "Error saving file: " + error.error_summary;
+                        message.textContent = "Error saving file: " + error.message;
+                        console.error('Error saving file:', error);
                     });
             } else {
                 message.textContent = "Please enter a username and content.";
@@ -157,10 +158,11 @@
                     })
                     .then(function(text) {
                         document.getElementById('filecontent').value = text;
-                        message.textContent = "File loaded";
+                        message.textContent = "File loaded successfully.";
                     })
                     .catch(function(error) {
-                        message.textContent = "Error loading file: " + error.error_summary;
+                        message.textContent = "Error loading file: " + error.message;
+                        console.error('Error loading file:', error);
                     });
             } else {
                 message.textContent = "Please enter a username to load their info.";
@@ -173,7 +175,7 @@
         });
 
         document.getElementById('logoutButton').addEventListener('click', function() {
-            // Handle logout by clearing access token (or similar)
+            // Handle logout by clearing access token or similar
             alert('Logged out!');
         });
     </script>
