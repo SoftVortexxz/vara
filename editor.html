@@ -105,7 +105,7 @@
 
         <!-- Content Textarea -->
         <label for="filecontent">Content:</label>
-        <textarea id="filecontent" placeholder="press new user!"></textarea>
+        <textarea id="filecontent" placeholder="Name: \nAge: \nDate of birth: \nCountry of birth: \nCurrent Country: \nJob: \n\nCriminal records: \n"></textarea>
 
         <!-- Buttons -->
         <button id="saveButton">Save</button>
@@ -116,95 +116,66 @@
         <p id="message"></p>
     </div>
 
+    <script src="https://unpkg.com/dropbox/dist/Dropbox-sdk.min.js"></script>
     <script>
-        // Replace with your GitHub Personal Access Token
-        const GITHUB_TOKEN = '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';
-        const GIST_ID = 'a0b6c39f6db05949aa84e58051bb9fe3'; // Gist ID where you want to store the file
+        const APP_KEY = 'bbki82mmfjvpxal'; // Replace with your Dropbox app key
+        const ACCESS_TOKEN = 'sl.B8NtHcmrCmH-yaM7JymwGgHevCZ15SSvV5NYa_gBjqHyVsqiPY1m94wysvB2zlZJYNZT2bDjN_TWNx_yI42_vUMtio_P9ZkVfIpJu_yh8Ju_Pn66BV4FtDoL_a9kLjBl0QwL1T0UdPWI'; // Replace with your Dropbox access token
 
- // Function to save file to GitHub Gist
-function saveToGist(fileContent) {
-    fetch(`https://api.github.com/gists/${GIST_ID}`, {
-        method: 'PATCH',
-        headers: {
-            'Authorization': `token ${GITHUB_TOKEN}`,
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            files: {
-                'varacity.db': {
-                    content: fileContent
-                }
-            }
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.files && data.files['varacity.db']) {
-            console.log('File saved:', data);
-            document.getElementById('message').textContent = 'File saved successfully';
-        } else {
-            document.getElementById('message').textContent = 'Failed to save file';
-        }
-    })
-    .catch(error => {
-        console.error('Error saving file:', error);
-        document.getElementById('message').textContent = 'Error saving file: ' + error.message;
-    });
-}
+        const dbx = new Dropbox.Dropbox({ accessToken: ACCESS_TOKEN });
 
-        // Function to load file from GitHub Gist
-        function loadFromGist() {
-            fetch(`https://api.github.com/gists/${GIST_ID}`)
-                .then(response => {
-                    if (!response.ok) {
-                        return response.json().then(err => {
-                            throw new Error(`Error ${response.status}: ${err.message}`);
-                        });
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.files['varacity.db']) {
-                        const fileContent = data.files['varacity.db'].content;
-                        document.getElementById('filecontent').value = fileContent;
-                        document.getElementById('message').textContent = 'File loaded successfully';
-                    } else {
-                        document.getElementById('message').textContent = 'File not found in Gist';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error loading file:', error);
-                    document.getElementById('message').textContent = 'File not found: ' + error.message;
-                });
-        }
+        document.addEventListener('DOMContentLoaded', function() {
+            const initialContent = `Name: \nAge: \nDate of birth: \nCountry of birth: \nCurrent Country: \nJob: \n\nCriminal records: \n`;
+            document.getElementById('filecontent').value = initialContent;
+        });
 
-        // Event listener for the save button
         document.getElementById('saveButton').addEventListener('click', function() {
+            const filename = document.getElementById('filename').value + '.db';
             const filecontent = document.getElementById('filecontent').value;
-            if (filecontent) {
-                saveToGist(filecontent);
+            const message = document.getElementById('message');
+
+            if (filename && filecontent) {
+                dbx.filesUpload({ path: `/vara/${filename}`, contents: filecontent })
+                    .then(function(response) {
+                        message.textContent = "File saved. File ID: " + response.result.id;
+                    })
+                    .catch(function(error) {
+                        message.textContent = "Error saving file: " + error.error_summary;
+                    });
             } else {
-                document.getElementById('message').textContent = 'Content cannot be empty';
+                message.textContent = "Please enter a username and content.";
             }
         });
 
-        // Event listener for the load button
         document.getElementById('loadButton').addEventListener('click', function() {
-            loadFromGist();
+            const filename = document.getElementById('filename').value + '.db';
+            const message = document.getElementById('message');
+            
+            if (filename) {
+                dbx.filesDownload({ path: `/vara/${filename}` })
+                    .then(function(response) {
+                        return response.fileBlob.text();
+                    })
+                    .then(function(text) {
+                        document.getElementById('filecontent').value = text;
+                        message.textContent = "File loaded";
+                    })
+                    .catch(function(error) {
+                        message.textContent = "Error loading file: " + error.error_summary;
+                    });
+            } else {
+                message.textContent = "Please enter a username to load their info.";
+            }
         });
 
-        // Event listener for the new user button
         document.getElementById('newUserButton').addEventListener('click', function() {
             document.getElementById('filename').value = '';
             document.getElementById('filecontent').value = `Name: \nAge: \nDate of birth: \nCountry of birth: \nCurrent Country: \nJob: \n\nCriminal records: \n`;
         });
 
-        // Event listener for the logout button
         document.getElementById('logoutButton').addEventListener('click', function() {
-            window.location.href = "index.html";
+            // Handle logout by clearing access token (or similar)
+            alert('Logged out!');
         });
     </script>
 </body>
 </html>
-
-
