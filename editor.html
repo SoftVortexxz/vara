@@ -7,59 +7,70 @@
     <style>
         /* General Styles */
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #000;  /* Black background */
-            color: #E0E0E0;  /* Light text color */
+            font-family: 'Arial', sans-serif;
+            color: #E0E0E0; /* Light text color */
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
+            overflow: hidden;
+            background: linear-gradient(135deg, #1a1a1a, #333333); /* Gradient background */
+            background-size: 400% 400%;
+            animation: gradientAnimation 10s ease infinite; /* Animated gradient */
+        }
+
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 0%; }
+            50% { background-position: 100% 100%; }
+            100% { background-position: 0% 0%; }
         }
 
         .container {
-            background-color: #1F1F1F;  /* Slightly lighter background for container */
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);  /* Soft shadow */
+            background-color: #1E1E1E; /* Slightly lighter background for container */
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.6); /* Enhanced shadow */
             text-align: center;
-            width: 350px;
-            position: relative;  /* Position relative for the logout button */
+            width: 400px;
+            position: relative;
         }
 
         /* Input Fields */
         input[type="text"], textarea {
-            width: calc(100% - 24px);  /* Full width minus padding */
-            padding: 12px;
+            width: calc(100% - 24px); /* Full width minus padding */
+            padding: 14px;
             margin: 12px 0;
-            background-color: #333;  /* Dark input background */
-            border: 1px solid #555;  /* Dark border */
-            border-radius: 5px;
-            color: #E0E0E0;  /* Light text color */
-            box-sizing: border-box;  /* Ensures padding doesn't increase the overall width */
+            background-color: #333; /* Dark input background */
+            border: 1px solid #555; /* Dark border */
+            border-radius: 6px;
+            color: #E0E0E0; /* Light text color */
+            box-sizing: border-box; /* Ensures padding doesn't increase the overall width */
+            font-size: 16px;
         }
 
         textarea {
-            height: 150px;  /* Fixed height for content area */
+            height: 200px; /* Increased height for content area */
             white-space: pre; /* Preserve white space and line breaks */
         }
 
         /* Buttons */
         button {
-            width: calc(33% - 24px);  /* Three buttons in a row */
-            padding: 12px;
-            background-color: #2979FF;  /* Bright blue button */
+            padding: 14px 20px;
+            background-color: #1E88E5; /* Bright blue button */
             border: none;
             color: #fff;
-            border-radius: 5px;
+            border-radius: 6px;
             cursor: pointer;
-            margin: 12px 4px;
+            margin: 10px 6px;
             font-weight: bold;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s, transform 0.2s;
+            font-size: 16px;
         }
 
         button:hover {
-            background-color: #1565C0;  /* Darker blue on hover */
+            background-color: #1565C0; /* Darker blue on hover */
+            transform: scale(1.05);
         }
 
         /* Logout Button */
@@ -67,30 +78,40 @@
             position: absolute;
             top: 10px;
             right: 10px;
-            width: auto;  /* Adjust width as needed */
-            padding: 8px 12px;
-            background-color: #FF5722;  /* Orange button for logout */
+            background-color: #FF5722; /* Orange button for logout */
+            border: none;
+            color: #fff;
+            border-radius: 6px;
+            cursor: pointer;
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+
+        #logoutButton:hover {
+            background-color: #E64A19; /* Darker orange on hover */
         }
 
         /* Success Messages */
         #message {
-            color: #69F0AE;  /* Bright green for success messages */
+            color: #76FF03; /* Bright green for success messages */
             margin-top: 10px;
+            font-size: 16px;
         }
 
         /* Headings */
         h2 {
             margin-bottom: 20px;
-            color: #E0E0E0;  /* Light text color for headings */
-            font-size: 24px;
+            color: #E0E0E0; /* Light text color for headings */
+            font-size: 28px;
         }
 
         /* Label Styles */
         label {
             text-align: left;
             display: block;
-            margin-bottom: 5px;
-            color: #B0B0B0;  /* Slightly lighter than the background */
+            margin-bottom: 8px;
+            color: #B0B0B0; /* Slightly lighter than the background */
+            font-size: 16px;
         }
     </style>
 </head>
@@ -101,7 +122,7 @@
         
         <!-- File Name Input -->
         <label for="filename">Name:</label>
-        <input type="text" id="filename" placeholder="Put the person's username here">
+        <input type="text" id="filename" placeholder="Enter username">
 
         <!-- Content Textarea -->
         <label for="filecontent">History & Info:</label>
@@ -119,8 +140,6 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const initialContent = `Name: \nAge: \nDate of birth: \nCountry of birth: \nCurrent Country: \nJob: \n\nCriminal records: \n`;
-            
-            // Set initial content for the textarea
             document.getElementById('filecontent').value = initialContent;
         });
 
@@ -128,12 +147,12 @@
             const filename = document.getElementById('filename').value;
             const filecontent = document.getElementById('filecontent').value;
             const message = document.getElementById('message');
-            
+
             if (filename && filecontent) {
                 localStorage.setItem(filename, filecontent);
                 message.textContent = "File saved";
             } else {
-                message.textContent = "Put the person's user, info and history";
+                message.textContent = "Please enter username and content";
             }
         });
 
@@ -141,7 +160,7 @@
             const filename = document.getElementById('filename').value;
             const filecontent = document.getElementById('filecontent');
             const message = document.getElementById('message');
-            
+
             if (filename) {
                 const savedContent = localStorage.getItem(filename);
                 if (savedContent) {
@@ -151,20 +170,16 @@
                     message.textContent = "File not found";
                 }
             } else {
-                message.textContent = "Put someone's user to load their info & history";
+                message.textContent = "Please enter username to load their info";
             }
         });
 
         document.getElementById('newUserButton').addEventListener('click', function() {
-            // Clear the filename input and content textarea
             document.getElementById('filename').value = '';
             document.getElementById('filecontent').value = `Name: \nAge: \nDate of birth: \nCountry of birth: \nCurrent Country: \nJob: \n\nCriminal records: \n`;
         });
 
         document.getElementById('logoutButton').addEventListener('click', function() {
-            // Clear localStorage (or session data)
-
-            // Redirect to the login page
             window.location.href = "index.html";
         });
     </script>
