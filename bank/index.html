@@ -131,8 +131,8 @@
         <input type="number" id="balance" placeholder="Enter balance">
 
         <!-- Buttons -->
-        <button id="saveBalanceButton">Save Balance</button>
-        <button id="loadBalanceButton">Load Balance</button>
+        <button id="saveBalanceButton">Save Account information</button>
+        <button id="loadBalanceButton">Load Account information</button>
         <button id="newUserButton">New User</button>
 
         <!-- Message Area -->
@@ -163,7 +163,7 @@
                     document.getElementById('balance').value = savedBalance;
                     message.textContent = `Balance loaded for ${username}`;
                 } else {
-                    message.textContent = "Balance not found";
+                    message.textContent = "Account not found";
                 }
             } else {
                 message.textContent = "Please enter a username to load balance";
@@ -179,8 +179,7 @@
 
         document.getElementById('logoutButton').addEventListener('click', function() {
             // Clear localStorage or session data, as needed
-            localStorage.clear();
-            window.location.href = "index.html"; // Redirect to login page
+            window.location.href = "login.html"; // Redirect to login page
         });
     </script>
 </body>
