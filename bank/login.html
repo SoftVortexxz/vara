@@ -97,7 +97,7 @@
             const storedPassword = '1c6b62ec-5990-4cbe-8955-3256068fe418';
 
             if (username === storedUsername && password === storedPassword) {
-                message.textContent = "Login successful!";
+                message.textContent = "Login successful, redirecting";
                 message.style.color = '#76FF03'; // Green for success
                 localStorage.setItem('isAuthenticated', true); // Save authentication status
 
