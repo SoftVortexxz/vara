@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Vara City</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #1a1a1a; /* Dark background */
+            color: #E0E0E0; /* Light text color */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #1E1E1E; /* Slightly lighter background */
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.6); /* Soft shadow */
+            text-align: center;
+            width: 400px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #E0E0E0; /* Light text color for heading */
+        }
+
+        input[type="text"], input[type="password"] {
+            width: calc(100% - 24px); /* Full width minus padding */
+            padding: 14px;
+            margin: 12px 0;
+            background-color: #333; /* Dark input background */
+            border: 1px solid #555; /* Dark border */
+            border-radius: 6px;
+            color: #E0E0E0; /* Light text color */
+            box-sizing: border-box; /* Ensures padding doesn't increase overall width */
+            font-size: 16px;
+        }
+
+        button {
+            padding: 14px 20px;
+            background-color: #1E88E5; /* Bright blue button */
+            border: none;
+            color: #fff;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 10px 6px;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.2s;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #1565C0; /* Darker blue on hover */
+            transform: scale(1.05);
+        }
+
+        #message {
+            color: #FF5722; /* Orange for error messages */
+            margin-top: 10px;
+        }
+
+        /* Redirect Links */
+        a {
+            display: block;
+            margin-top: 10px;
+            color: #1E88E5;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Login to Vara City</h2>
+
+        <!-- Username Input -->
+        <input type="text" id="username" placeholder="Enter Username">
+
+        <!-- Password Input -->
+        <input type="password" id="password" placeholder="Enter Password">
+
+        <!-- Login Button -->
+        <button id="loginButton">Login</button>
+
+        <!-- Message Area for Error/Success Messages -->
+        <p id="message"></p>
+
+        <!-- Redirect Links -->
+        <a href="criminal-records.html">Criminal Records</a>
+        <a href="balance-management.html">Account Balance Management</a>
+    </div>
+
+    <script>
+        document.getElementById('loginButton').addEventListener('click', function() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const message = document.getElementById('message');
+
+            // Simple login system (could be extended for more complex authentication)
+            const storedUsername = 'admin';
+            const storedPassword = '1c6b62ec-5990-4cbe-8955-3256068fe418';
+
+            if (username === storedUsername && password === storedPassword) {
+                message.textContent = "Login successful";
+                message.style.color = '#76FF03'; // Green for success
+                localStorage.setItem('isAuthenticated', true); // Save authentication status
+
+                // Redirect to either page after login
+                setTimeout(() => {
+                    window.location.href = "index.html"; // Redirect to Criminal Records after login
+                }, 1000);
+            } else {
+                message.textContent = "Invalid username or password";
+                message.style.color = '#FF5722'; // Orange for error
+            }
+        });
+
+        // Clear the message if user starts typing again
+        document.getElementById('username').addEventListener('input', function() {
+            document.getElementById('message').textContent = '';
+        });
+
+        document.getElementById('password').addEventListener('input', function() {
+            document.getElementById('message').textContent = '';
+        });
+    </script>
+</body>
+</html>
