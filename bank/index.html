@@ -1,1 +1,187 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Balance Management</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            color: #E0E0E0; /* Light text color */
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: linear-gradient(135deg, #1a1a1a, #333333); /* Static gradient background */
+            background-size: 400% 400%;
+        }
+
+        .sidebar {
+            background-color: #1E1E1E; /* Sidebar background */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 60px;
+            padding: 0 20px;
+            position: fixed; /* Fixed position for the sidebar */
+            top: 0;
+            left: 0;
+            width: 100%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); /* Subtle shadow */
+            z-index: 1000; /* Ensure it's above other content */
+        }
+
+        .sidebar h2 {
+            margin: 0;
+            color: #E0E0E0; /* Light text color */
+            font-size: 24px;
+            text-align: center;
+        }
+
+        .logout-button {
+            position: absolute;
+            top: 10px;
+            right: 40px; /* Adjusted right value for better positioning */
+            background-color: #FF5722; /* Orange button for logout */
+            border: none;
+            color: #fff;
+            border-radius: 6px;
+            cursor: pointer;
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+
+        .logout-button:hover {
+            background-color: #E64A19; /* Darker orange on hover */
+        }
+
+        .container {
+            background-color: #1E1E1E; /* Slightly lighter background for container */
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.6); /* Enhanced shadow */
+            text-align: center;
+            width: 400px;
+            margin: 150px auto 0 auto; /* Center container horizontally and adjust top margin */
+        }
+
+        /* Input Fields */
+        input[type="text"], input[type="number"] {
+            width: calc(100% - 24px); /* Full width minus padding */
+            padding: 14px;
+            margin: 12px 0;
+            background-color: #333; /* Dark input background */
+            border: 1px solid #555; /* Dark border */
+            border-radius: 6px;
+            color: #E0E0E0; /* Light text color */
+            box-sizing: border-box; /* Ensures padding doesn't increase the overall width */
+            font-size: 16px;
+        }
+
+        /* Buttons */
+        button {
+            padding: 14px 20px;
+            background-color: #1E88E5; /* Bright blue button */
+            border: none;
+            color: #fff;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 10px 6px;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.2s;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #1565C0; /* Darker blue on hover */
+            transform: scale(1.05);
+        }
+
+        /* Success Messages */
+        #message {
+            color: #76FF03; /* Bright green for success messages */
+            margin-top: 10px;
+            font-size: 16px;
+        }
+
+        /* Label Styles */
+        label {
+            text-align: left;
+            display: block;
+            margin-bottom: 8px;
+            color: #B0B0B0; /* Slightly lighter than the background */
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <button class="logout-button" id="logoutButton">Logout</button>
+        <h2>Account Balance Management</h2>
+    </div>
+
+    <div class="container">
+        <!-- Username Input -->
+        <label for="username">Username:</label>
+        <input type="text" id="username" placeholder="Enter username">
+
+        <!-- Account Balance Input -->
+        <label for="balance">Account Balance:</label>
+        <input type="number" id="balance" placeholder="Enter balance">
+
+        <!-- Buttons -->
+        <button id="saveBalanceButton">Save Balance</button>
+        <button id="loadBalanceButton">Load Balance</button>
+        <button id="newUserButton">New User</button>
+
+        <!-- Message Area -->
+        <p id="message"></p>
+    </div>
+
+    <script>
+        document.getElementById('saveBalanceButton').addEventListener('click', function() {
+            const username = document.getElementById('username').value;
+            const balance = document.getElementById('balance').value;
+            const message = document.getElementById('message');
+
+            if (username && balance) {
+                localStorage.setItem(username, balance);
+                message.textContent = `Balance saved for ${username}`;
+            } else {
+                message.textContent = "Please enter both username and balance";
+            }
+        });
+
+        document.getElementById('loadBalanceButton').addEventListener('click', function() {
+            const username = document.getElementById('username').value;
+            const message = document.getElementById('message');
+
+            if (username) {
+                const savedBalance = localStorage.getItem(username);
+                if (savedBalance) {
+                    document.getElementById('balance').value = savedBalance;
+                    message.textContent = `Balance loaded for ${username}`;
+                } else {
+                    message.textContent = "Balance not found";
+                }
+            } else {
+                message.textContent = "Please enter a username to load balance";
+            }
+        });
+
+        document.getElementById('newUserButton').addEventListener('click', function() {
+            // Clear the username and balance input fields
+            document.getElementById('username').value = '';
+            document.getElementById('balance').value = '';
+            document.getElementById('message').textContent = '';
+        });
+
+        document.getElementById('logoutButton').addEventListener('click', function() {
+            // Clear localStorage or session data, as needed
+            localStorage.clear();
+            window.location.href = "index.html"; // Redirect to login page
+        });
+    </script>
+</body>
+</html>
