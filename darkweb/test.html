@@ -65,7 +65,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Sigma</h1>
+        <h1>S</h1>
         <div class="messages" id="messages"></div>
         <input type="text" id="messageInput" placeholder="Type a message...">
         <button onclick="sendMessage()">Send</button>
@@ -74,6 +74,8 @@
         const userId = 'user-' + Math.floor(Math.random() * 10000); // Random user ID for simulation
 
         function displayMessage(user, text) {
+            if (!user || !text) return; // Avoid displaying undefined messages
+
             const messagesDiv = document.getElementById('messages');
             const messageDiv = document.createElement('div');
             messageDiv.className = 'message';
@@ -103,15 +105,22 @@
         function loadMessages() {
             const messages = JSON.parse(localStorage.getItem('messages')) || [];
             messages.forEach(msg => displayMessage(msg.user, msg.text));
+            if (messages.length > 0) {
+                lastMessageId = messages[messages.length - 1].id; // Track the last message ID
+            }
         }
 
         function checkForNewMessages() {
             const messages = JSON.parse(localStorage.getItem('messages')) || [];
-            const lastMessage = messages[messages.length - 1];
-            if (lastMessage && lastMessage.user !== userId) {
-                displayMessage(lastMessage.user, lastMessage.text);
+            if (messages.length > 0) {
+                const lastMessage = messages[messages.length - 1];
+                if (lastMessage && lastMessage.user !== userId) {
+                    displayMessage(lastMessage.user, lastMessage.text);
+                }
             }
         }
+
+        let lastMessageId = null;
 
         window.onload = function() {
             loadMessages();
