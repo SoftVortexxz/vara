@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anonymous Chat (WebRTC)</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #282c34;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            text-align: center;
+            width: 80%;
+            max-width: 600px;
+            background-color: #3b3f47;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.7);
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        #your-number {
+            margin-bottom: 20px;
+        }
+
+        input, textarea {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: none;
+        }
+
+        textarea {
+            resize: none;
+            height: 150px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            border: none;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #chat-window {
+            height: 300px;
+            overflow-y: auto;
+            background-color: #2c2f35;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .message {
+            text-align: left;
+            background-color: #007bff;
+            padding: 10px;
+            border-radius: 8px;
+            max-width: 60%;
+        }
+
+        .message.theirs {
+            background-color: #6c757d;
+            align-self: flex-start;
+        }
+
+        .message.mine {
+            align-self: flex-end;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Anonymous Chat (P2P)</h1>
+
+        <input type="text" id="user-number" placeholder="Your unique number (enter manually)">
+        <button onclick="generateOffer()">Start Chat</button>
+
+        <textarea id="offer" placeholder="Share this offer with the other user"></textarea>
+        <textarea id="answer" placeholder="Paste the answer from the other user"></textarea>
+        <button onclick="acceptAnswer()">Accept Answer</button>
+
+        <div id="chat-window"></div>
+        <input type="text" id="message" placeholder="Type your message...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <script>
+        let peerConnection;
+        let dataChannel;
+
+        async function generateOffer() {
+            peerConnection = new RTCPeerConnection();
+
+            // Create a data channel for communication
+            dataChannel = peerConnection.createDataChannel('chat');
+            dataChannel.onmessage = receiveMessage;
+
+            // Generate offer and display it
+            const offer = await peerConnection.createOffer();
+            await peerConnection.setLocalDescription(offer);
+            document.getElementById('offer').value = JSON.stringify(offer);
+
+            peerConnection.onicecandidate = (event) => {
+                if (event.candidate) {
+                    document.getElementById('offer').value = JSON.stringify(peerConnection.localDescription);
+                }
+            };
+        }
+
+        async function acceptAnswer() {
+            const answer = JSON.parse(document.getElementById('answer').value);
+            await peerConnection.setRemoteDescription(answer);
+        }
+
+        function receiveMessage(event) {
+            const chatWindow = document.getElementById('chat-window');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message theirs';
+            messageDiv.textContent = event.data;
+            chatWindow.appendChild(messageDiv);
+        }
+
+        function sendMessage() {
+            const messageInput = document.getElementById('message');
+            const message = messageInput.value;
+            if (dataChannel && message) {
+                dataChannel.send(message);
+
+                const chatWindow = document.getElementById('chat-window');
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message mine';
+                messageDiv.textContent = message;
+                chatWindow.appendChild(messageDiv);
+
+                messageInput.value = '';
+            }
+        }
+
+        async function acceptOffer() {
+            peerConnection = new RTCPeerConnection();
+
+            peerConnection.ondatachannel = (event) => {
+                dataChannel = event.channel;
+                dataChannel.onmessage = receiveMessage;
+            };
+
+            const offer = JSON.parse(document.getElementById('offer').value);
+            await peerConnection.setRemoteDescription(offer);
+
+            const answer = await peerConnection.createAnswer();
+            await peerConnection.setLocalDescription(answer);
+            document.getElementById('answer').value = JSON.stringify(answer);
+        }
+
+        // Allow accepting offer from other users
+        document.getElementById('offer').addEventListener('input', acceptOffer);
+    </script>
+</body>
+</html>
