@@ -8,134 +8,169 @@
         body {
             font-family: Arial, sans-serif;
             background-color: #f0f0f0;
+            color: #333;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            height: 100vh;
             margin: 0;
-        }
-        .container {
-            background: #ffffff;
             padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            max-width: 500px;
-            width: 100%;
         }
         h1 {
-            font-size: 1.5em;
             margin-bottom: 20px;
         }
-        textarea {
+        .container {
+            max-width: 600px;
             width: 100%;
-            height: 100px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        textarea {
+            width: calc(100% - 20px);
             margin-bottom: 10px;
             padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            font-size: 1em;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            resize: vertical;
         }
         button {
             padding: 10px 20px;
-            font-size: 1em;
             border: none;
-            border-radius: 5px;
+            border-radius: 4px;
             background-color: #007bff;
             color: white;
+            font-size: 16px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s ease;
         }
         button:hover {
             background-color: #0056b3;
         }
+        #chat {
+            margin-top: 20px;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+        }
+        #messages {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        #messages li {
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
+    <h1>WebRTC Chat</h1>
     <div class="container">
-        <h1>WebRTC Chat</h1>
-        <textarea id="messageBox" placeholder="Type your message here..."></textarea>
-        <button onclick="sendMessage()">Send Message</button>
-        <textarea id="offerBox" placeholder="Paste offer here..."></textarea>
+        <textarea id="offer" placeholder="Paste offer here..."></textarea>
         <button onclick="sendOffer()">Send Offer</button>
-        <textarea id="answerBox" placeholder="Paste answer here..."></textarea>
+        <textarea id="answer" placeholder="Paste answer here..."></textarea>
         <button onclick="acceptOffer()">Accept Offer</button>
-        <textarea id="chatLog" placeholder="Chat Log" readonly></textarea>
     </div>
+    <div id="chat" class="container">
+        <h2>Chat</h2>
+        <ul id="messages"></ul>
+        <input id="messageInput" type="text" placeholder="Type your message..." />
+        <button onclick="sendMessage()">Send Message</button>
+    </div>
+
     <script>
-        let localConnection;
-        let remoteConnection;
-        let localDataChannel;
-        let remoteDataChannel;
-
-        function logMessage(message) {
-            const chatLog = document.getElementById('chatLog');
-            chatLog.value += message + '\n';
-            chatLog.scrollTop = chatLog.scrollHeight; // Scroll to bottom
-        }
-
-        function sendMessage() {
-            const messageBox = document.getElementById('messageBox');
-            const message = messageBox.value;
-            localDataChannel.send(message);
-            logMessage(`You: ${message}`);
-            messageBox.value = ''; // Clear the input box
-        }
-
-        function setupConnection() {
-            localConnection = new RTCPeerConnection();
-            remoteConnection = new RTCPeerConnection();
-
-            localDataChannel = localConnection.createDataChannel('chat');
-            localDataChannel.onmessage = (event) => {
-                logMessage(`Peer: ${event.data}`);
-            };
-
-            remoteConnection.ondatachannel = (event) => {
-                remoteDataChannel = event.channel;
-                remoteDataChannel.onmessage = (event) => {
-                    logMessage(`Peer: ${event.data}`);
-                };
-            };
-
-            localConnection.onicecandidate = (event) => {
-                if (event.candidate) {
-                    remoteConnection.addIceCandidate(event.candidate);
-                }
-            };
-
-            remoteConnection.onicecandidate = (event) => {
-                if (event.candidate) {
-                    localConnection.addIceCandidate(event.candidate);
-                }
-            };
-        }
+        const configuration = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] };
+        let localPeerConnection = null;
+        let remotePeerConnection = null;
+        const messagesList = document.getElementById('messages');
+        const messageInput = document.getElementById('messageInput');
 
         function sendOffer() {
-            setupConnection();
-            localConnection.createOffer().then(offer => {
-                localConnection.setLocalDescription(offer);
-                document.getElementById('offerBox').value = JSON.stringify(offer);
-            }).catch(error => console.error('Error creating offer:', error));
+            if (localPeerConnection) {
+                localPeerConnection.createOffer().then(offer => {
+                    localPeerConnection.setLocalDescription(offer);
+                    document.getElementById('offer').value = offer.sdp;
+                }).catch(error => {
+                    console.error('Error creating offer:', error);
+                });
+            } else {
+                console.error('Local peer connection not initialized.');
+            }
         }
 
         function acceptOffer() {
-            setupConnection();
-            const offer = JSON.parse(document.getElementById('offerBox').value);
-            localConnection.setRemoteDescription(new RTCSessionDescription(offer))
-                .then(() => localConnection.createAnswer())
-                .then(answer => localConnection.setLocalDescription(answer))
-                .then(() => remoteConnection.setRemoteDescription(new RTCSessionDescription(localConnection.localDescription)))
-                .then(() => {
-                    document.getElementById('answerBox').value = JSON.stringify(localConnection.localDescription);
-                })
-                .catch(error => console.error('Error accepting offer:', error));
+            const offer = document.getElementById('offer').value;
+            if (!offer) {
+                console.error('No offer provided.');
+                return;
+            }
+
+            const offerDescription = new RTCSessionDescription({ type: 'offer', sdp: offer });
+
+            if (remotePeerConnection) {
+                remotePeerConnection.setRemoteDescription(offerDescription).then(() => {
+                    return remotePeerConnection.createAnswer();
+                }).then(answer => {
+                    return remotePeerConnection.setLocalDescription(answer);
+                }).then(() => {
+                    document.getElementById('answer').value = remotePeerConnection.localDescription.sdp;
+                }).catch(error => {
+                    console.error('Error accepting offer:', error);
+                });
+            } else {
+                console.error('Remote peer connection not initialized.');
+            }
         }
 
-        // Use this function if you want to manually set the answer from the other peer
-        function setAnswer() {
-            const answer = JSON.parse(document.getElementById('answerBox').value);
-            remoteConnection.setRemoteDescription(new RTCSessionDescription(answer));
+        function sendMessage() {
+            const message = messageInput.value;
+            if (message && localPeerConnection && localPeerConnection.dataChannel) {
+                localPeerConnection.dataChannel.send(message);
+                appendMessage('Me: ' + message);
+                messageInput.value = '';
+            }
         }
+
+        function appendMessage(message) {
+            const li = document.createElement('li');
+            li.textContent = message;
+            messagesList.appendChild(li);
+        }
+
+        function initializeConnections() {
+            localPeerConnection = new RTCPeerConnection(configuration);
+            remotePeerConnection = new RTCPeerConnection(configuration);
+
+            localPeerConnection.onicecandidate = event => {
+                if (event.candidate) {
+                    remotePeerConnection.addIceCandidate(event.candidate);
+                }
+            };
+
+            remotePeerConnection.onicecandidate = event => {
+                if (event.candidate) {
+                    localPeerConnection.addIceCandidate(event.candidate);
+                }
+            };
+
+            remotePeerConnection.ondatachannel = event => {
+                const receiveChannel = event.channel;
+                receiveChannel.onmessage = event => {
+                    appendMessage('Other: ' + event.data);
+                };
+            };
+
+            const dataChannelOptions = { ordered: true };
+            const dataChannel = localPeerConnection.createDataChannel('chat', dataChannelOptions);
+            dataChannel.onmessage = event => {
+                appendMessage('Other: ' + event.data);
+            };
+
+            localPeerConnection.ondatachannel = event => {
+                localPeerConnection.dataChannel = event.channel;
+            };
+        }
+
+        initializeConnections();
     </script>
 </body>
 </html>
