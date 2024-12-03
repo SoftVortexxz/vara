@@ -142,36 +142,69 @@
     </div>
 
     <script>
+        const WEBHOOK_URL = 'https://discord.com/api/webhooks/1313562631704940665/XnjUEPPraoIfkpWffITYRH2eNYXntujPkbH3cl4ifs61UQTwyONcZTDO4hwBY62FWXXr'; // Replace with your actual Discord Webhook URL
+
         document.addEventListener('DOMContentLoaded', function() {
             const initialContent = `Name: \nAge: \nDate of birth: \nCountry of birth: \nCurrent Country: \nJob: \n\nCriminal records: \n`;
             document.getElementById('filecontent').value = initialContent;
         });
 
         document.getElementById('saveButton').addEventListener('click', function() {
-            const filename = document.getElementById('filename').value;
-            const filecontent = document.getElementById('filecontent').value;
+            const username = document.getElementById('filename').value;
+            const historyInfo = document.getElementById('filecontent').value;
             const message = document.getElementById('message');
 
-            if (filename && filecontent) {
-                const blob = new Blob([filecontent], { type: 'text/plain' });
-                const link = document.createElement('a');
-                link.href = URL.createObjectURL(blob);
-                link.download = `${filename}_records.txt`;
-                link.click();
+            if (username && historyInfo) {
+                // Create an embed object to format the webhook message
+                const embed = {
+                    title: `Criminal Record for ${username}`,
+                    description: historyInfo,
+                    color: 0xFF5733, // Orange color
+                    fields: [
+                        {
+                            name: "Username",
+                            value: username,
+                            inline: true
+                        },
+                        {
+                            name: "History & Info",
+                            value: historyInfo,
+                            inline: false
+                        }
+                    ]
+                };
 
-                message.textContent = "Saved."
+                // Send the data to the Discord Webhook using fetch
+                fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: 'APD',
+                        embeds: [embed]
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    message.textContent = "Record successfully sent to the webhook!";
+                })
+                .catch(error => {
+                    message.textContent = "Error sending record to the webhook.";
+                    console.error('Error:', error);
+                });
             } else {
-                message.textContent = "Please enter username and content";
+                message.textContent = "Please enter a username and the history/info.";
             }
         });
 
         document.getElementById('loadButton').addEventListener('click', function() {
-            const filename = document.getElementById('filename').value;
+            const username = document.getElementById('filename').value;
             const filecontent = document.getElementById('filecontent');
             const message = document.getElementById('message');
 
-            if (filename) {
-                const savedContent = localStorage.getItem(filename);
+            if (username) {
+                const savedContent = localStorage.getItem(username);
                 if (savedContent) {
                     filecontent.value = savedContent;
                     message.textContent = "File loaded";
