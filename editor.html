@@ -134,7 +134,6 @@
 
         <!-- Buttons -->
         <button id="saveButton">Save</button>
-        <button id="loadButton">Load</button>
         <button id="newUserButton">New User</button>
 
         <!-- Message Area -->
@@ -155,11 +154,10 @@
             const message = document.getElementById('message');
 
             if (username && historyInfo) {
-                // Create an embed object to format the webhook message
                 const embed = {
                     title: `Criminal Record for ${username}`,
                     description: historyInfo,
-                    color: 0xFF5733,
+                    color: 0xFF5733, // Orange color
                     fields: [
                         {
                             name: "Username",
@@ -181,13 +179,13 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        username: 'APD',
+                        username: 'APD Records',
                         embeds: [embed]
                     })
                 })
                 .then(response => response.json())
                 .then(data => {
-                    message.textContent = "sent to #records";
+                    message.textContent = "Record sent #records";
                 })
                 .catch(error => {
                     message.textContent = "Error sending";
@@ -195,24 +193,6 @@
                 });
             } else {
                 message.textContent = "burp";
-            }
-        });
-
-        document.getElementById('loadButton').addEventListener('click', function() {
-            const username = document.getElementById('filename').value;
-            const filecontent = document.getElementById('filecontent');
-            const message = document.getElementById('message');
-
-            if (username) {
-                const savedContent = localStorage.getItem(username);
-                if (savedContent) {
-                    filecontent.value = savedContent;
-                    message.textContent = "File loaded";
-                } else {
-                    message.textContent = "File not found";
-                }
-            } else {
-                message.textContent = "Please enter username to load their info";
             }
         });
 
