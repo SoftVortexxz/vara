@@ -159,7 +159,7 @@
                 const embed = {
                     title: `Criminal Record for ${username}`,
                     description: historyInfo,
-                    color: 0xFF5733, // Orange color
+                    color: 0xFF5733,
                     fields: [
                         {
                             name: "Username",
@@ -187,14 +187,14 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    message.textContent = "Record successfully sent to the webhook!";
+                    message.textContent = "sent to #records";
                 })
                 .catch(error => {
-                    message.textContent = "Error sending record to the webhook.";
+                    message.textContent = "Error sending";
                     console.error('Error:', error);
                 });
             } else {
-                message.textContent = "Please enter a username and the history/info.";
+                message.textContent = "burp";
             }
         });
 
