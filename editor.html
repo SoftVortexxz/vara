@@ -154,8 +154,13 @@
             const message = document.getElementById('message');
 
             if (filename && filecontent) {
-                localStorage.setItem(filename, filecontent);
-                message.textContent = "File saved";
+                const blob = new Blob([filecontent], { type: 'text/plain' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = `${filename}_records.txt`;
+                link.click();
+
+                message.textContent = "Saved."
             } else {
                 message.textContent = "Please enter username and content";
             }
