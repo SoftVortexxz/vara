@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -113,6 +112,15 @@
             color: #B0B0B0; /* Slightly lighter than the background */
             font-size: 16px;
         }
+
+        /* Warning Style */
+        .warning {
+            color: #D32F2F; /* Red text */
+            font-size: 14px; /* Smaller font */
+            margin-top: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -130,55 +138,62 @@
         <label for="balance">Balance:</label>
         <input type="number" id="balance" placeholder="Enter balance">
 
-        <!-- Buttons -->
-        <button id="saveBalanceButton">Save Account information</button>
-        <button id="loadBalanceButton">Load Account information</button>
-        <button id="newUserButton">New User</button>
+        <!-- Save Button -->
+        <button id="saveBalanceButton">Save Account Information</button>
+
+        <!-- Warning Text Below Save Button -->
+        <p class="warning">Please copy and paste the account details into the designated channel before saving, otherwise it will not count.</p>
 
         <!-- Message Area -->
         <p id="message"></p>
     </div>
 
     <script>
+        const WEBHOOK_URL = 'https://discord.com/api/webhooks/1314013042341576808/tk58yC-F7jXbQ5hlrMmbOO_JHyPxfu0yjRLyIsSuV6c_1_XYh_OIfQ_wjqcz2_cf_FV6'; // Replace with your actual Discord Webhook URL
+
         document.getElementById('saveBalanceButton').addEventListener('click', function() {
             const username = document.getElementById('username').value;
             const balance = document.getElementById('balance').value;
             const message = document.getElementById('message');
 
             if (username && balance) {
-                localStorage.setItem(username, balance);
-                message.textContent = `Balance saved for ${username}`;
+                const embed = {
+                    title: `Account Information for ${username}`,
+                    color: 0xFF5733, // Orange color
+                    fields: [
+                        {
+                            name: "Account Balance",
+                            value: `$${balance}`,
+                            inline: false
+                        }
+                    ]
+                };
+
+                // Send the data to the Discord Webhook using fetch
+                fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: 'Vara Bank',
+                        embeds: [embed]
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    message.textContent = "Account information saved and sent!";
+                })
+                .catch(error => {
+                    message.textContent = "Error sending information.";
+                    console.error('Error:', error);
+                });
             } else {
-                message.textContent = "Please enter both username and balance";
+                message.textContent = "Please enter both username and balance.";
             }
-        });
-
-        document.getElementById('loadBalanceButton').addEventListener('click', function() {
-            const username = document.getElementById('username').value;
-            const message = document.getElementById('message');
-
-            if (username) {
-                const savedBalance = localStorage.getItem(username);
-                if (savedBalance) {
-                    document.getElementById('balance').value = savedBalance;
-                    message.textContent = `Balance loaded for ${username}`;
-                } else {
-                    message.textContent = "Account not found";
-                }
-            } else {
-                message.textContent = "Please enter a username to load balance";
-            }
-        });
-
-        document.getElementById('newUserButton').addEventListener('click', function() {
-            // Clear the username and balance input fields
-            document.getElementById('username').value = '';
-            document.getElementById('balance').value = '';
-            document.getElementById('message').textContent = '';
         });
 
         document.getElementById('logoutButton').addEventListener('click', function() {
-            // Clear localStorage or session data, as needed
             window.location.href = "login.html"; // Redirect to login page
         });
     </script>
