@@ -57,9 +57,9 @@
         /* Warning at the top */
         .warning {
             background-color: #FFEB3B; /* Yellow background for warning */
-            color: #000;
-            font-size: 18px;
-            padding: 12px;
+            color: #D32F2F; /* Red color for the text */
+            font-size: 22px; /* Increased font size */
+            padding: 15px;
             text-align: center;
             font-weight: bold;
             position: fixed;
@@ -207,7 +207,7 @@
                     message.textContent = "Record sent #records";
                 })
                 .catch(error => {
-                    message.textContent = "Record sent to #records";
+                    message.textContent = "Error sending";
                     console.error('Error:', error);
                 });
             } else {
