@@ -54,6 +54,21 @@
             background-color: #E64A19; /* Darker orange on hover */
         }
 
+        /* Warning at the top */
+        .warning {
+            background-color: #FFEB3B; /* Yellow background for warning */
+            color: #000;
+            font-size: 18px;
+            padding: 12px;
+            text-align: center;
+            font-weight: bold;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 999; /* Above other content */
+        }
+
         .container {
             background-color: #1E1E1E; /* Slightly lighter background for container */
             padding: 40px;
@@ -61,7 +76,7 @@
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.6); /* Enhanced shadow */
             text-align: center;
             width: 400px;
-            margin: 150px auto 0 auto; /* Center container horizontally and adjust top margin */
+            margin: 100px auto 0 auto; /* Adjusted to not overlap with the warning */
         }
 
         /* Input Fields */
@@ -119,10 +134,16 @@
     </style>
 </head>
 <body>
+    <!-- Warning Message -->
+    <div class="warning">
+        Before you edit anyone's history, please copy and paste the history in the #records# channel in Discord. Otherwise, it will not count.
+    </div>
+
     <div class="sidebar">
         <button class="logout-button" id="logoutButton">Logout</button>
         <h2>Vara City Criminal Records</h2>
     </div>
+
     <div class="container editor-container">
         <!-- File Name Input -->
         <label for="filename">Name:</label>
@@ -132,8 +153,8 @@
         <label for="filecontent">History & Info:</label>
         <textarea id="filecontent" placeholder="Name: \nAge: \nDate of birth: \nCountry of birth: \nCurrent Country: \nJob: \n\nCriminal records: \n"></textarea>
 
-        <!-- Buttons -->
-        <button id="saveButton">Save</button>
+        <!-- Centered Save Button -->
+        <button id="saveButton" style="display: block; margin: 20px auto;">Save</button>
 
         <!-- Message Area -->
         <p id="message"></p>
@@ -186,7 +207,7 @@
                     message.textContent = "Record sent #records";
                 })
                 .catch(error => {
-                    message.textContent = "Error sending";
+                    message.textContent = "Record sent to #records";
                     console.error('Error:', error);
                 });
             } else {
