@@ -54,21 +54,6 @@
             background-color: #E64A19; /* Darker orange on hover */
         }
 
-        /* Warning at the top */
-        .warning {
-            background-color: #FFEB3B; /* Yellow background for warning */
-            color: #D32F2F; /* Red color for the text */
-            font-size: 22px; /* Increased font size */
-            padding: 15px;
-            text-align: center;
-            font-weight: bold;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 999; /* Above other content */
-        }
-
         .container {
             background-color: #1E1E1E; /* Slightly lighter background for container */
             padding: 40px;
@@ -131,14 +116,18 @@
             color: #B0B0B0; /* Slightly lighter than the background */
             font-size: 16px;
         }
+
+        /* Warning Style */
+        .warning {
+            color: #D32F2F; /* Red text */
+            font-size: 14px; /* Smaller font */
+            margin-top: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
-    <!-- Warning Message -->
-    <div class="warning">
-        Before you edit anyone's history, please copy and paste the history in the #records# channel in Discord. Otherwise, it will not count.
-    </div>
-
     <div class="sidebar">
         <button class="logout-button" id="logoutButton">Logout</button>
         <h2>Vara City Criminal Records</h2>
@@ -153,8 +142,11 @@
         <label for="filecontent">History & Info:</label>
         <textarea id="filecontent" placeholder="Name: \nAge: \nDate of birth: \nCountry of birth: \nCurrent Country: \nJob: \n\nCriminal records: \n"></textarea>
 
-        <!-- Centered Save Button -->
+        <!-- Save Button -->
         <button id="saveButton" style="display: block; margin: 20px auto;">Save</button>
+
+        <!-- Warning Text Below Save Button -->
+        <p class="warning">Before you edit anyone's history, please copy and paste the history in the #records# channel in Discord. Otherwise, it will not count.</p>
 
         <!-- Message Area -->
         <p id="message"></p>
